@@ -63,6 +63,7 @@ chart addDecoration: popup.
 chart minValueY: 0; maxValueY: 110.
 chart addDecoration: (RSVerticalTick new
 	numberOfTicks: 10;
+	doNotUseNiceLabel;
 	labelConversion: [ :value | value asString,'%' ];
 	yourself).
 
