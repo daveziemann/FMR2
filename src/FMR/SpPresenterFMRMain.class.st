@@ -396,6 +396,11 @@ SpPresenterFMRMain >> headlinePresenter: anObject [
 ]
 
 { #category : #help }
+SpPresenterFMRMain >> helpHints [
+^' Type ? for help, z to zero the timer, p to pause the timer.'
+]
+
+{ #category : #help }
 SpPresenterFMRMain >> helpHistoryFormat [
 ^'Choose the format to use to display the matchplay events in the Recording History:
 
@@ -770,7 +775,7 @@ Transcript clear
 SpPresenterFMRMain >> matchResultSummary [
 ^self matchState isEndMatch 
 	ifTrue: [ self matchState matchStatusSummary,': ',self matchState matchProgressSummary ]
-	ifFalse: [ self matchState matchStatusSummary,self matchState matchDetailsStatus ]
+	ifFalse: [ self matchState matchStatusSummary,self matchState matchDetailsStatus,self helpHints ]
 ]
 
 { #category : #accessing }

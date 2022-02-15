@@ -1,5 +1,5 @@
 Class {
-	#name : #SpPresenterPossessionFraction1,
+	#name : #SpPresenterPossessionFractionMulti,
 	#superclass : #'SpPresenterFMR_',
 	#instVars : [
 		'matchState',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #creating }
-SpPresenterPossessionFraction1 >> buildEventWrappersForFractionStatistic: aPossessionTimeLimitFractionStatistic teamNumber: aTeamNumber [
+SpPresenterPossessionFractionMulti >> buildEventWrappersForFractionStatistic: aPossessionTimeLimitFractionStatistic teamNumber: aTeamNumber [
 | scanner matchplayEvents teamFractions last teamFractionCumulativeAverage assocs fractions |
 
 scanner := aPossessionTimeLimitFractionStatistic scanner.
@@ -36,12 +36,12 @@ last:=0. fractions doWithIndex: [ :e :i | e isZero ifTrue: [ fractions at: i put
 ]
 
 { #category : #drawing }
-SpPresenterPossessionFraction1 >> colourForTeam: aTeamNumber [
+SpPresenterPossessionFractionMulti >> colourForTeam: aTeamNumber [
 ^self matchState colourForTeam: aTeamNumber inGame: 0
 ]
 
 { #category : #drawing }
-SpPresenterPossessionFraction1 >> drawOnCanvas: aCanvas fractionStatistic: aPSPossessionTimeLimitFractionStatistic [
+SpPresenterPossessionFractionMulti >> drawOnCanvas: aCanvas fractionStatistic: aPSPossessionTimeLimitFractionStatistic [
 | chart lp1 lp2 team1Wrappers team2Wrappers popup title lb |
 
 chart := RSChart new.
@@ -92,7 +92,7 @@ aCanvas @ RSCanvasController
 ]
 
 { #category : #creating }
-SpPresenterPossessionFraction1 >> fractionClasses [
+SpPresenterPossessionFractionMulti >> fractionClasses [
 ^{
 	.PSPossessionTimeLimitFractionOn2Rod
 	.PSPossessionTimeLimitFractionOn5Rod
@@ -103,12 +103,12 @@ SpPresenterPossessionFraction1 >> fractionClasses [
 ]
 
 { #category : #creating }
-SpPresenterPossessionFraction1 >> fractionStatistics [
+SpPresenterPossessionFractionMulti >> fractionStatistics [
 ^self fractionClasses collect: [ :eachFractionClass | eachFractionClass new matchState: self matchState ]
 ]
 
 { #category : #initialization }
-SpPresenterPossessionFraction1 >> initializePresenters [
+SpPresenterPossessionFractionMulti >> initializePresenters [
 | rp p |
 
 rp := self fractionStatistics collect: [ :eachFractionStatistic |
@@ -122,7 +122,7 @@ self layout: (SpBoxLayout newTopToBottom
 ]
 
 { #category : #drawing }
-SpPresenterPossessionFraction1 >> linePlotForWrappers: matchplayEventWrappers teamNumber: aTeamNumber [
+SpPresenterPossessionFractionMulti >> linePlotForWrappers: matchplayEventWrappers teamNumber: aTeamNumber [
 
 ^RSLinePlot new
 	x: (1 to: matchplayEventWrappers size)
@@ -132,24 +132,24 @@ SpPresenterPossessionFraction1 >> linePlotForWrappers: matchplayEventWrappers te
 ]
 
 { #category : #accessing }
-SpPresenterPossessionFraction1 >> matchState [
+SpPresenterPossessionFractionMulti >> matchState [
 
 	^ matchState
 ]
 
 { #category : #accessing }
-SpPresenterPossessionFraction1 >> matchState: anObject [
+SpPresenterPossessionFractionMulti >> matchState: anObject [
 
 	matchState := anObject
 ]
 
 { #category : #initialization }
-SpPresenterPossessionFraction1 >> open [
+SpPresenterPossessionFractionMulti >> open [
 self openWithSpec extent: 1800@900.
 ]
 
 { #category : #drawing }
-SpPresenterPossessionFraction1 >> showNewGames: matchplayEventWrappers [
+SpPresenterPossessionFractionMulti >> showNewGames: matchplayEventWrappers [
 ^matchplayEventWrappers collectWithIndex: [ :e :i |
 	i = 1
 		ifTrue: [ 'Game 1' ]

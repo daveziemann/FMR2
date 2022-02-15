@@ -29,10 +29,10 @@ self noteBook
 	provider: [ self newPresenter: SpPresenterPossessionFraction ];
 	
 	addPageTitle: 'PTFL (Multi)'
-	provider: [ self newPresenter: SpPresenterPossessionFraction1 ];
+	provider: [ self newPresenter: SpPresenterPossessionFractionMulti ];
 	
 	addPageTitle: 'Possession Share Pie (Multi)'
-	provider: [ self newPresenter: SpPresenterFMRPiePossessionShare1 ].
+	provider: [ self newPresenter: SpPresenterFMRPiePossessionShareMulti ].
 	
 self layout: (SpBoxLayout newTopToBottom
 	add: self mainMenu expand: false;

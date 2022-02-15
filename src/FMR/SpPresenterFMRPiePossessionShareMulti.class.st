@@ -1,16 +1,16 @@
 Class {
-	#name : #SpPresenterFMRPiePossessionShare1,
+	#name : #SpPresenterFMRPiePossessionShareMulti,
 	#superclass : #'SpPresenterFMRPie_',
 	#category : #FMR
 }
 
 { #category : #initialization }
-SpPresenterFMRPiePossessionShare1 >> computeExtent [
+SpPresenterFMRPiePossessionShareMulti >> computeExtent [
 ^(self matchState numberOfGames + 1 * 300)@320
 ]
 
 { #category : #initialization }
-SpPresenterFMRPiePossessionShare1 >> initializePresenters [
+SpPresenterFMRPiePossessionShareMulti >> initializePresenters [
 
 self statisticCategory: 'Possession Share'.
 self statistics: (self matchState statisticsGenerator generate presentableStatistics select: [ :e | e statisticCategory = self statisticCategory ]).
@@ -29,7 +29,7 @@ self layout: (SpBoxLayout newTopToBottom
 ]
 
 { #category : #initialization }
-SpPresenterFMRPiePossessionShare1 >> seePie: canvas numbers: share [
+SpPresenterFMRPiePossessionShareMulti >> seePie: canvas numbers: share [
 | pie pieLabel |
 
 pie := RSPie new
@@ -63,6 +63,6 @@ pie canvas @ RSCanvasController.
 ]
 
 { #category : #initialization }
-SpPresenterFMRPiePossessionShare1 >> title [
+SpPresenterFMRPiePossessionShareMulti >> title [
 ^'How the teams shared the total possession time in each game'
 ]
