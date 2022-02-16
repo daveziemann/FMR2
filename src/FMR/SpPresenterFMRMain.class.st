@@ -139,7 +139,7 @@ self matchState addMatchplayEvent: matchplayEvent
 { #category : #'processing - real time' }
 SpPresenterFMRMain >> beginActiveRecording [
 
-self createTimerProcess.
+self ensureTimerProcess.
 self updateMatchSummary.
 ]
 
@@ -231,7 +231,7 @@ SpPresenterFMRMain >> createTimerProcess [
 self terminateTimerProcess.
 self timerProcess: (
 	[ | delay |
-		delay := Delay forMilliseconds: 1000.
+		delay := Delay forMilliseconds: 500.
 		[ self updateCurrentEventDuration. delay wait ] repeat ])
 			fork.
 FMRGrowlMorph growlDebugFor: 'Timer' message: 'Timer process created.'
@@ -302,6 +302,13 @@ SpPresenterFMRMain >> elapsedRelativity [
 SpPresenterFMRMain >> enable: aBoolean menuItemAtName: aString [
 
 (self menuItemAtName: aString) enabled: aBoolean
+]
+
+{ #category : #timer }
+SpPresenterFMRMain >> ensureTimerProcess [
+"Create and start the timer process if it's not already running"
+
+self timerProcess ifNil: [ self createTimerProcess ].
 ]
 
 { #category : #accessing }
@@ -678,7 +685,14 @@ SpPresenterFMRMain >> isActivePlayRecording [
 	ifNotEmpty: [ :s | '.523' includes: s first ]
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
+SpPresenterFMRMain >> isCommandMode [
+^self newInputString
+	ifEmpty: [ false ]
+	ifNotEmpty: [ self newInputString first = $@ ]
+]
+
+{ #category : #testing }
 SpPresenterFMRMain >> isDetailMode [
 ^isDetailMode ifNil: [ false ]
 ]
@@ -689,7 +703,14 @@ SpPresenterFMRMain >> isDetailMode: anObject [
 	isDetailMode := anObject
 ]
 
-{ #category : #'processing - real time' }
+{ #category : #testing }
+SpPresenterFMRMain >> isFirstCharacterOfLine [
+"Answer if the input field was empty and a new character has been typed"
+
+^self newInputString size = 1 & self oldInputString isEmpty
+]
+
+{ #category : #testing }
 SpPresenterFMRMain >> isMagicKey [
 "Answer if the added character is a magic key"
 
@@ -1075,17 +1096,18 @@ SpPresenterFMRMain >> printCurrentLine [
 	printCurrentMatchplayEvents: self currentEventsSize) text
 ]
 
-{ #category : #processing }
+{ #category : #'processing - real time' }
 SpPresenterFMRMain >> processCharacterAdded: characterAdded [
 | matchplayEvent detailText |
 
+"Command mode - during - Ignore characters"
+self isCommandMode ifTrue: [ ^self ].
+
 "Detail mode - entering - set comment mode ON"
 self isDetailMode not & (characterAdded=$[) ifTrue: [ ^self isDetailMode: true ].
-
 "Detail mode - during - Ignore characters"
 self isDetailMode & (characterAdded~=$]) ifTrue: [ ^self ].
-
-"Detail mode - exiting - create completed comment event"
+"Detail mode - exiting - modify the last event with the specified detail"
 self isDetailMode & (characterAdded=$]) ifTrue: [
 	self isDetailMode: false.
 	detailText := self recordingInputField text allButLast copyAfterLast: $[.
@@ -1111,7 +1133,7 @@ self feedbackLabel label: ''.
 
 ]
 
-{ #category : #processing }
+{ #category : #'processing - real time' }
 SpPresenterFMRMain >> processCharacterAddedOrDeleted [
 "we come in here when a character has been added to or deleted from the end of the input field"
 
@@ -1123,29 +1145,6 @@ self restoreOldInput.
 self setCursorToEnd.
 
 
-]
-
-{ #category : #processing }
-SpPresenterFMRMain >> processCharacterDeleted1: deletedCharacter [
-
-self isCommentMode
-	ifTrue: [	 deletedCharacter isDoubleQuote
-		ifTrue: [ ^self isCommentMode: false ]
-		ifFalse: [ ^self "Deleted a character inside a comment" ]]
-	ifFalse: [ deletedCharacter isDoubleQuote ifTrue: [ self isCommentMode: true. "back in comment mode" ]].
-	
-"If we get here we think we need to delete the last matchplay event - sanity check this"
-(MatchplayEvent newFromCharacter: deletedCharacter inMatchState: self matchState)
-	ifNil: [ "self error: 'The deleted character doesn''t have an event'" ]
-	ifNotNil: [
-		self matchState latestMatchplayEvent
-			ifNil: [ self error: 'Wants to delete an event we don''t have' ]
-			ifNotNil: [ :lme | lme representation = deletedCharacter
-				ifTrue: [ self matchState deleteLatestMatchplayEvent ]
-				ifFalse: [ self error: 'Wants to delete an event that doesn''t match the deleted character' ]]]
-		
-		
-		
 ]
 
 { #category : #processing }
@@ -1210,7 +1209,7 @@ self newInputString: newString.
 
 self oldInputString = self newInputString ifTrue: [ ^self ].
 
-self isMagicKey & self isDetailMode not ifTrue: [ ^self processMagicKey ].
+self isMagicKey & (self isDetailMode not) & (self isCommandMode not) ifTrue: [ ^self processMagicKey ].
 
 "If we are not in Active Recording mode, then ignore keystrokes until CR pressed"
 self isActivePlayRecording ifFalse: [
@@ -1224,7 +1223,7 @@ self isActivePlayRecording ifFalse: [
 self processCharacterAddedOrDeleted.
 
 "After typing the first the character, start the event timer process"
-self wasFirstCharacterAdded ifTrue: [ self beginActiveRecording ].
+self isFirstCharacterOfLine ifTrue: [ self beginActiveRecording ].
 
 "Pretty print"
 self recordingOutputFieldUpdate.
@@ -1890,13 +1889,6 @@ SpPresenterFMRMain >> viewAllPossessionTimeFractions [
 SpMatchStateTabPresenter new openWithSpec
 	title: 'Trawl Possession Time Limit Fraction';
 	extent: 1400@900.
-]
-
-{ #category : #'input field processing' }
-SpPresenterFMRMain >> wasFirstCharacterAdded [
-"Answer if the input field was empty and a new characer has been typed"
-
-^self newInputString size = 1 & self oldInputString isEmpty
 ]
 
 { #category : #'update UI' }
