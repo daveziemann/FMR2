@@ -386,7 +386,7 @@ presenter := SpStatisticsPagePresenter basicNew
 	initialize.
 window := presenter openWithSpec.
 window title: 'FMR - Top Win-correlating Statistics'.
-window extent: 600@800.
+window extent: 1100@800.
 
 ]
 

@@ -127,9 +127,9 @@ MatchplayEventDNA >> lineEndMarker [
 "Increase the size of the line end marker if there is detail on the event"
 scale := self detail ifNil:[ 1 ] ifNotNil: [ 1.2 ].
 
-^self matchplayEvent isGoal 
-	ifTrue: [ RSEllipse new radius: 10*scale; color: self colour ]
-	ifFalse: [ RSBox new size: 20@20*scale; color: self colour ]
+self matchplayEvent isGoal ifTrue: [ ^RSEllipse new radius: 10*scale; color: self colour ].
+self matchplayEvent class == Infraction ifTrue: [ ^RSShapeFactory octagon size: 25*scale; color: self colour ].
+^RSBox new size: 20@20*scale; color: self colour
 ]
 
 { #category : #divert }

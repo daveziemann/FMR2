@@ -7,6 +7,11 @@ Class {
 	#category : #FMR
 }
 
+{ #category : #initialization }
+SpPresenterDNA >> colourForTeam: aTeamNumber [
+^self matchState colourForTeam: aTeamNumber inGame: 0
+]
+
 { #category : #drawing }
 SpPresenterDNA >> createShapes [
 ^(1 to: self matchState numberOfGames )
@@ -44,10 +49,24 @@ aCanvas @ RSCanvasController.
 SpPresenterDNA >> initializePresenters [
 | rp |
 rp := self instantiate: SpRoassalPresenter.
-rp script: [ :canvas | self drawShapes: self createShapes onCanvas: canvas ].
+rp script: [ :canvas | self drawShapes: self createShapes onCanvas: canvas.
+	(self legendTeams container: canvas) build.
+	canvas add: self shapeForTitle ].
 self layout: (SpBoxLayout newLeftToRight hAlignStart
 	add: rp withConstraints: [ :c | c width: 1800 ];
 	yourself)
+]
+
+{ #category : #drawing }
+SpPresenterDNA >> legendTeams [
+| legend |
+
+legend := RSLegend new.
+legend layout horizontal.
+legend location above offset: 0@(-50).
+legend text: self matchState teamOne teamName withBoxColor: (self colourForTeam: 1).
+legend text: self matchState teamTwo teamName withBoxColor: (self colourForTeam: 2).
+^legend
 ]
 
 { #category : #accessing }
@@ -60,4 +79,13 @@ SpPresenterDNA >> matchState [
 SpPresenterDNA >> matchState: anObject [
 
 	matchState := anObject
+]
+
+{ #category : #drawing }
+SpPresenterDNA >> shapeForTitle [
+^RSLabel new
+	text: 'DNA for match where ',self matchState matchProgressSummary;
+	fontSize: 16;
+	translateTo: 500@(-250);
+	yourself
 ]
