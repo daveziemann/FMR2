@@ -796,7 +796,7 @@ Transcript clear
 SpPresenterFMRMain >> matchResultSummary [
 ^self matchState isEndMatch 
 	ifTrue: [ self matchState matchStatusSummary,': ',self matchState matchProgressSummary ]
-	ifFalse: [ self matchState matchStatusSummary,self matchState matchDetailsStatus,self helpHints ]
+	ifFalse: [ self matchState matchStatusSummary,'. ',self matchState matchDetailsStatus,self helpHints ]
 ]
 
 { #category : #accessing }
@@ -1497,6 +1497,13 @@ self recordingInputField adapter widget textMorph editor selectAt: self newInput
 
 ]
 
+{ #category : #menu }
+SpPresenterFMRMain >> setTableTypeTo: tableSpec [
+self matchState setTableType: tableSpec.
+self updateMatchSummary.
+self updateUIState
+]
+
 { #category : #'processing - real time' }
 SpPresenterFMRMain >> showHeadlineStatisticsForCompletedGame [
 "Game just ended - generate some real-time headline stats"
@@ -1732,6 +1739,11 @@ SpPresenterFMRMain >> subMenuRecording [
 				action: [ self newMatch ] ];
 		addItem: [ :item | 
 			item
+				name: 'Table Type and Orientation';
+				icon: (self iconNamed: #glamorousBrowse);
+				subMenu: self subMenuTableType ];
+		addItem: [ :item | 
+			item
 				name: 'Enter or Edit Match Details...';
 				icon: (self iconNamed: #glamorousBrowse);
 				action: [ self editMatchDetails ] ];
@@ -1742,6 +1754,33 @@ SpPresenterFMRMain >> subMenuRecording [
 				action: [ self restartRecording ] ];
 
 		yourself
+		
+	
+]
+
+{ #category : #menu }
+SpPresenterFMRMain >> subMenuTableType [
+
+^MatchState tableTypesAndColours
+	inject: self newMenu
+	into: [ :menu :ttac |
+		menu
+			addItem: [ :item |
+				item
+					name: ttac first;
+					icon: (self iconNamed: #diff);
+					subMenu: (self newMenu
+						addItem: [ :subItem |
+							subItem
+								name: ttac second,' on left and ',ttac third,' on right';
+								icon: (self iconNamed: #diff);
+								action: [ self setTableTypeTo: ($, join: ttac) ]];
+						addItem: [ :subItem |
+							subItem
+								name: ttac third,' on left and ',ttac second,' on right';
+								icon: (self iconNamed: #diff);
+								action: [ self setTableTypeTo: ($, join: {ttac first.ttac third.ttac second}) ]])	];
+				yourself ]
 ]
 
 { #category : #timer }

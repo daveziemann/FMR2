@@ -435,7 +435,7 @@ SpPresenterFMRMatchDetails >> morphRight: aTableTypeAndColour [
 { #category : #initialization }
 SpPresenterFMRMatchDetails >> postOpenMods [
 | index |
-index := self tableTypeAndColourOptions indexOf: self matchState table asString.
+index := self tableTypeAndColourOptions indexOf: self matchState table tableSpec.
 index isZero ifFalse: [ tableTypeDropList selectIndex: index ].
 self tournament text: self matchState tournament.
 self event text: self matchState event.

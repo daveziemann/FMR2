@@ -57,10 +57,3 @@ SpMatchStateTabPresenter >> notebook: anObject [
 
 	notebook := anObject
 ]
-
-{ #category : #initialization }
-SpMatchStateTabPresenter >> postOpenMods [
-
-self window title: 'FMR Statistics - ',self matchState matchDescriptionWithoutTeamName,' - ',self matchState matchProgressSummary.
-
-]

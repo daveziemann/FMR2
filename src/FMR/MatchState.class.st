@@ -478,10 +478,12 @@ MatchState >> matchDetailsCommandsFromStatePack [
 { #category : #printing }
 MatchState >> matchDetailsStatus [
 "Answer a single line match details status summary"
+| t |
 
+t := 'Table type is ',self table asString,'.'.
 ^self areMatchDetailsComplete
-	ifTrue: [ '' ]
-	ifFalse: [ '. Match Details are incomplete.' ]
+	ifTrue: [ t ]
+	ifFalse: [ t,' Match Details are incomplete.' ]
 ]
 
 { #category : #printing }
@@ -489,8 +491,8 @@ MatchState >> matchProgressSummary [
 "Answer a single line match progress summary"
 
 ^self
-	latestMatchplayEventDo: [ :e | e matchProgressSummary ]
-	ifNone: [ '' ] 
+	latestMatchplayEventDo: [ :e | e matchProgressSummary,' on ',self table type ]
+	ifNone: [ 'Table type is ',self table type ] 
 ]
 
 { #category : #printing }
@@ -769,6 +771,14 @@ self matchplayEvents do: [ :eachMatchplayEvent |
 		 
 ]
 
+{ #category : #'actions - updating' }
+MatchState >> setTableType: tableSpec [
+
+self statePackAt: #table put: tableSpec.
+self table updateFrom: (tableSpec tokensBasedOn: ',')
+
+]
+
 { #category : #UI }
 MatchState >> sideForTeam: aTeamNumber inGame: aGameNumber [
 "Answer the side the specifed team was playing on during the specified game
@@ -910,11 +920,7 @@ MatchState >> table: anObject [
 { #category : #'actions - updating' }
 MatchState >> tableUpdateFrom: aMatchDetailPresenter [
 
-aMatchDetailPresenter tableTypeDropList selectedItem
-	in: [ :tableSpec |
-		self statePackAt: #table put: tableSpec.
-		self table updateFrom: (tableSpec tokensBasedOn: ',') ]
-
+self setTableType: aMatchDetailPresenter tableTypeDropList selectedItem
 ]
 
 { #category : #access }

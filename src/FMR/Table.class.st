@@ -26,13 +26,24 @@ self sideRight: (TableSide new sideIndicator: $>).
 ]
 
 { #category : #printing }
-Table >> printOn: aStream [
+Table >> printOn1: aStream [
 
 aStream
 	<< (self type,',') asText;
 	<< (self sideLeft colourName asText addAttribute: (TextColor color: self sideLeft colour));
 	<< ',' asText;
 	<< (self sideRight colourName asText addAttribute: (TextColor color: self sideRight colour))
+]
+
+{ #category : #printing }
+Table >> printOn: aStream [
+
+aStream
+	<< (self type,' (') asText;
+	<< (self sideLeft asText: self sideLeft asString);
+	<< ',' asText;
+	<< (self sideRight asText: self sideRight asString);
+	<< ')' asText
 ]
 
 { #category : #access }
@@ -70,6 +81,17 @@ Table >> sideRight: anObject [
 { #category : #access }
 Table >> sides [
 ^{self sideLeft.self sideRight}
+]
+
+{ #category : #printing }
+Table >> tableSpec [
+^String streamContents: [ :s |
+	s
+		<< self type;
+		<< ',';
+		<< self sideLeft colourName;
+		<< ',';
+		<< self sideRight colourName ]
 ]
 
 { #category : #accessing }
