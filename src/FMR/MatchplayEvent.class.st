@@ -802,6 +802,18 @@ MatchplayEvent >> teamWithPossession [
 ^teamWithPossession_ ifNil:[ teamWithPossession_ := self matchState teamWithPossessionInEvent: self ]
 ]
 
+{ #category : #accessing }
+MatchplayEvent >> teamWithPossession_ [
+
+	^ teamWithPossession_
+]
+
+{ #category : #accessing }
+MatchplayEvent >> teamWithPossession_: anObject [
+
+	^ teamWithPossession_ := anObject
+]
+
 { #category : #access }
 MatchplayEvent >> timeLimit [
 "Answer the maximum duration allowed for this event in the rules"

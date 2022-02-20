@@ -16,6 +16,9 @@ self noteBook
 	addPageTitle: 'Match DNA'
 	provider: [ SpPresenterDNA basicNew matchState: self matchState; initialize ];
 
+	addPageTitle: 'Match Ball Travel'
+	provider: [ SpPresenterBallTravel basicNew matchState: self matchState; initialize ];
+
 	addPageTitle: 'Tab Game Headline Charts'
 	provider: [ (SpPresenterHeadlineCharts newOn: self matchState) addPageForEachGame ];
 

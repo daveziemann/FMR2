@@ -1,6 +1,6 @@
 Class {
 	#name : #FMRTransitionTable,
-	#superclass : #FMRObject,
+	#superclass : #FMRStatistics,
 	#instVars : [
 		'matchState',
 		'transitionTable'
