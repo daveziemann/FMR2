@@ -31,6 +31,13 @@ Rod5 >> rduFrom5Rod: a5Rod [
 ]
 
 { #category : #access }
+Rod5 >> rduFromGoal: aGoal [
+^(self teamWithPossession = aGoal teamWithPossession
+	ifTrue: [ 4 ]
+	ifFalse: [ 3 ]) + aGoal goalOffsetFraction
+]
+
+{ #category : #access }
 Rod5 >> rduToRodOrGoal: anotherRodOrGoal [
 ^anotherRodOrGoal rduFrom5Rod: self
 ]
