@@ -539,6 +539,21 @@ i := self eventIndex.
 { #category : #'UI - graphics' }
 MatchplayEvent >> printBriefly [
 ^String streamContents: [ :s |
+	s
+		<< self printIndex;
+		space;
+		<< self sideWithPossession sideIndicator;
+		<< self printRep.
+	self durationOrZero isZero ifFalse: [
+		s
+			space;
+			<< ' for ';
+			<< self asDuration prettyPrintToCompleteSeconds ]]
+]
+
+{ #category : #'UI - graphics' }
+MatchplayEvent >> printBriefly1 [
+^String streamContents: [ :s |
 	s << self printIndex; << self printRep.
 	self durationOrZero isZero ifFalse: [ s space; << 'Duration: '; << self asDuration prettyPrintToCompleteSeconds ]]
 ]

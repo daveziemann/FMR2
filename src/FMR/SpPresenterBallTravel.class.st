@@ -13,6 +13,25 @@ SpPresenterBallTravel >> colourForTeam: aTeamNumber [
 ]
 
 { #category : #drawing }
+SpPresenterBallTravel >> createGoalLines [
+| teamOneGoal teamOneGoalLine teamTwoGoal teamTwoGoalLine |
+
+teamOneGoal := Goal new
+	matchState: self matchState;
+	teamWithPossession_: self matchState teamOne;
+	yourself.
+teamOneGoalLine := (self createLineForRod: teamOneGoal) dashed; width: 8.
+teamTwoGoal := Goal new
+	matchState: self matchState;
+	teamWithPossession_: self matchState teamTwo;
+	yourself.
+teamTwoGoalLine := (self createLineForRod: teamTwoGoal) dashed; width: 8.
+
+^{teamOneGoalLine.teamTwoGoalLine}
+
+]
+
+{ #category : #drawing }
 SpPresenterBallTravel >> createHandle: aRod [
 | popup handle |
 popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
@@ -30,13 +49,13 @@ handle := RSBox new
 SpPresenterBallTravel >> createLineForRod: aRod [
 | popup line startTime endTime |
 popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
-startTime := aRod matchState matchplayEvents first startTime - 50000 / self timeScale.
-endTime := aRod matchState matchplayEvents last startTime + 50000 / self timeScale.
+startTime := aRod matchState matchplayEvents first startTime - 50000 / PseudoRodTransition timeScale.
+endTime := aRod matchState matchplayEvents last startTime + 50000 / PseudoRodTransition timeScale.
 line := RSLine new
 	model: aRod;
 	color: (self colourForTeam: aRod teamWithOwnershipIndex);
-	startPoint: startTime @ (self pseudoRodLocation: aRod);
-	endPoint: endTime @ (self pseudoRodLocation: aRod);
+	startPoint: startTime @ (PseudoRodTransition pseudoRodLocation: aRod);
+	endPoint: endTime @ (PseudoRodTransition pseudoRodLocation: aRod);
 	width: 4;	
 	@ popup;
 	when: RSMouseClick do: [];
@@ -72,7 +91,7 @@ rodLines := OrderedCollection new.
 
 { #category : #drawing }
 SpPresenterBallTravel >> createShapes [
-^{self createTransitionLines.self createRodLines}
+^{self createTransitionLines.self createRodLines.self createGoalLines}
 ]
 
 { #category : #drawing }
@@ -124,24 +143,12 @@ SpPresenterBallTravel >> matchState: anObject [
 ]
 
 { #category : #drawing }
-SpPresenterBallTravel >> pseudoRodLocation: aPseudoRodEvent [
-"Answer the vertical displacement of the specified pseudoRod from the origin, team two's goal"
-
-^aPseudoRodEvent pseudoRodLocation * 20
-]
-
-{ #category : #drawing }
 SpPresenterBallTravel >> shapeForTitle [
 ^RSLabel new
-	text: 'DNA for match where ',self matchState matchProgressSummary;
+	text: 'Ball Transitions for match where ',self matchState matchProgressSummary;
 	fontSize: 16;
-	translateTo: 500@(-250);
+	translateTo: 500@(-120);
 	yourself
-]
-
-{ #category : #drawing }
-SpPresenterBallTravel >> timeScale [
-^300.0
 ]
 
 { #category : #drawing }

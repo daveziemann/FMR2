@@ -63,8 +63,8 @@ PSMorphTreeModelTransitionTable >> matchState [
 ]
 
 { #category : #UI }
-PSMorphTreeModelTransitionTable >> mouseDown: aPresentableStatistic [
-aPresentableStatistic matchState open
+PSMorphTreeModelTransitionTable >> mouseDown: aRod [
+self transitionTableGenerator inspect
 ]
 
 { #category : #building }

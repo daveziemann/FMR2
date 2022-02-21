@@ -9,16 +9,33 @@ Class {
 }
 
 { #category : #drawing }
+PseudoRodTransition class >> pseudoRodLocation: aPseudoRodEvent [
+"Answer the vertical displacement of the specified pseudoRod from the origin, team two's goal"
+
+^aPseudoRodEvent pseudoRodLocation * self pseudoRodLocationScale
+]
+
+{ #category : #drawing }
+PseudoRodTransition class >> pseudoRodLocationScale [
+^5
+]
+
+{ #category : #tuning }
+PseudoRodTransition class >> timeScale [
+^1200.0
+]
+
+{ #category : #drawing }
 PseudoRodTransition >> asLine [
 | popup lineStopShortBy line |
-popup := RSPopup text: self popupTextBlock.	
+popup := RSPopup text: (self popupText withNoLineLongerThan: 60).
 lineStopShortBy := (self toRodLocation - self fromRodLocation) sign * 10.
 line := RSLine new
 	model: self;
 	color: self colour;
 	startPoint: self fromElapsedTimeDisplacement @ self fromRodLocation;
 	endPoint: self toElapsedTimeDisplacement @ (self toRodLocation - lineStopShortBy);
-	width: 2;	
+	width: 3;	
 	@ popup;
 	when: RSMouseClick do: self mouseClickBlock;
 	yourself.
@@ -32,12 +49,12 @@ PseudoRodTransition >> colour [
 
 ^self fromEvent isGoal 
 	ifTrue: [ Color transparent ]
-	ifFalse: [ self fromEvent colour ]
+	ifFalse: [ self fromEvent matchState colourForTeam: self fromEvent teamWithOwnershipIndex inGame: 0 ]
 ]
 
 { #category : #drawing }
 PseudoRodTransition >> elapsedTimeDisplacement: aPseudoRod [
-^aPseudoRod startTime / self timeScale
+^aPseudoRod startTime / self class timeScale
 ]
 
 { #category : #drawing }
@@ -59,7 +76,7 @@ PseudoRodTransition >> fromEvent: anObject [
 
 { #category : #drawing }
 PseudoRodTransition >> fromRodLocation [
-^self pseudoRodLocation: self fromEvent
+^self class pseudoRodLocation: self fromEvent
 ]
 
 { #category : #drawing }
@@ -81,34 +98,32 @@ PseudoRodTransition >> mouseClickBlock [
 ]
 
 { #category : #drawing }
-PseudoRodTransition >> popupTextBlock [
-^[ :aTransition |
-	String streamContents: [  :s |
-		s
-			<< aTransition fromEvent shapeHoverText;
-			cr; cr;
-			<< ' to ';
-			cr; cr;			
-			<< aTransition toEvent shapeHoverText ]]
+PseudoRodTransition >> popupText [
+^String streamContents: [  :s |
+	s
+		<< 'The ball started on ';
+		<< self fromEvent teamWithOwnership teamName;
+		<< '''s ';
+		<< self fromEvent printPseudoRod;
+		<< ' and after the transition it was on ';
+		<< self toEvent teamWithOwnership teamName;
+		<< '''s ';
+		<< self toEvent printPseudoRod;
+		<< ' at which time ';
+		<< self toEvent matchProgressSummary;
+		cr; << Character null; cr; "Dumb way to get a blank line"
+		<< 'The angle of the line is proportional to the possession time on the rod the transition is coming from.';
+		cr; << Character null; cr. "Dumb way to get a blank line"
+		self printOn: s ]
 ]
 
 { #category : #drawing }
 PseudoRodTransition >> printOn: aStream [
-self fromEvent printOn: aStream.
-aStream << ' -> '.
-self toEvent printOn: aStream.
-]
-
-{ #category : #drawing }
-PseudoRodTransition >> pseudoRodLocation: aPseudoRodEvent [
-"Answer the vertical displacement of the specified pseudoRod from the origin, team two's goal"
-
-^aPseudoRodEvent pseudoRodLocation * 20
-]
-
-{ #category : #tuning }
-PseudoRodTransition >> timeScale [
-^300.0
+aStream
+	<< 'A transition from ';
+	<< self fromEvent printBriefly;
+	<< ' to ';
+	<< self toEvent printBriefly
 ]
 
 { #category : #drawing }
@@ -130,5 +145,5 @@ PseudoRodTransition >> toEvent: anObject [
 
 { #category : #drawing }
 PseudoRodTransition >> toRodLocation [
-^self pseudoRodLocation: self toEvent
+^self class pseudoRodLocation: self toEvent
 ]
