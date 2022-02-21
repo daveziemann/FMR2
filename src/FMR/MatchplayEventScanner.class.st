@@ -29,7 +29,7 @@ MatchplayEventScanner >> ballTravelDistances [
 "Select all Rod and Goal events for the receiver's game configuration"
 self sequenceEvents: {(self selectForConfiguration select: [ :eachMatchplayEvent | eachMatchplayEvent isPseudoRod ])}.
 ^(1 to: self lastSequenceSize - 1) collect: [ :i |
-		(self lastSequence at: i) distanceToRodOrGoal: (self lastSequence at: i+1) ].
+		(self lastSequence at: i) travelDistanceToRodOrGoal: (self lastSequence at: i+1) ].
 
 ]
 

@@ -11,9 +11,7 @@ Rod3 class >> representation [
 
 { #category : #access }
 Rod3 >> rduFrom2Rod: a2Rod [
-^self teamWithPossession = a2Rod teamWithPossession
-	ifTrue: [ 4 ]
-	ifFalse: [ 1 ]
+^a2Rod rduFrom3Rod: self
 ]
 
 { #category : #access }

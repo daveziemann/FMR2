@@ -99,11 +99,7 @@ self toEvent printOn: aStream.
 PseudoRodTransition >> rodLocation: aPseudoRodEvent [
 "Answer the horizontal displacement of the specified pseudoRod from the origin, team left's goal"
 
-^(aPseudoRodEvent distanceToRodOrGoal: (Goal new
-	matchState: self fromEvent matchState;
-	teamWithPossession_: self fromEvent matchState teamLeft;
-	yourself)) * 20
-		 
+^self fromEvent matchState table rodLocation: aPseudoRodEvent
 ]
 
 { #category : #drawing }

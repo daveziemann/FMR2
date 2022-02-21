@@ -34,12 +34,15 @@ PseudoRod >> printPseudoRod [
 
 { #category : #access }
 PseudoRod >> rduFromGoal: aGoal [
-"The ball does not travel from the goal to any rod"
-
-^0
+^self subclassResponsibility 
 ]
 
 { #category : #access }
 PseudoRod >> rduToRodOrGoal: anotherRodOrGoal [
 ^self subclassResponsibility 
+]
+
+{ #category : #access }
+PseudoRod >> travelDistanceToRodOrGoal: anotherRodOrGoal [
+^(self rduToRodOrGoal: anotherRodOrGoal) * self matchState table rduSize
 ]

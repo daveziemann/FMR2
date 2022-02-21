@@ -69,23 +69,17 @@ Goal >> isLastGoalOfGame [
 
 { #category : #access }
 Goal >> rduFrom2Rod: a2Rod [
-^(self teamWithPossession = a2Rod teamWithPossession
-	ifTrue: [ 6 ]
-	ifFalse: [ 1 ]) + self goalOffsetFraction
+^a2Rod rduFromGoal: self
 ]
 
 { #category : #access }
 Goal >> rduFrom3Rod: a3Rod [
-^(self teamWithPossession = a3Rod teamWithPossession
-	ifTrue: [ 2 ]
-	ifFalse: [ 5 ]) + self goalOffsetFraction
+^a3Rod rduFromGoal: self
 ]
 
 { #category : #access }
 Goal >> rduFrom5Rod: a5Rod [
-^(self teamWithPossession = a5Rod teamWithPossession
-	ifTrue: [ 4 ]
-	ifFalse: [ 3 ]) + self goalOffsetFraction
+^a5Rod rduFromGoal: self
 ]
 
 { #category : #access }
@@ -123,4 +117,10 @@ Goal >> timeLimit [
 "Answer the maximum duration allowed for this event in the rules"
 
 ^5 seconds
+]
+
+{ #category : #access }
+Goal >> travelDistanceToRodOrGoal: anotherRodOrGoal [
+"For measuring ball travel distance, we say that the distance from the goal (to the 5-rod) is 0"
+^0 
 ]
