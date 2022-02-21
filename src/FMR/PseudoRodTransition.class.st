@@ -10,13 +10,14 @@ Class {
 
 { #category : #drawing }
 PseudoRodTransition >> asLine [
-| popup line |
+| popup lineStopShortBy line |
 popup := RSPopup text: self popupTextBlock.	
+lineStopShortBy := (self toRodLocation - self fromRodLocation) sign * 10.
 line := RSLine new
 	model: self;
 	color: self colour;
 	startPoint: self fromElapsedTimeDisplacement @ self fromRodLocation;
-	endPoint: self toElapsedTimeDisplacement @ self toRodLocation;
+	endPoint: self toElapsedTimeDisplacement @ (self toRodLocation - lineStopShortBy);
 	width: 2;	
 	@ popup;
 	when: RSMouseClick do: self mouseClickBlock;
@@ -36,7 +37,7 @@ PseudoRodTransition >> colour [
 
 { #category : #drawing }
 PseudoRodTransition >> elapsedTimeDisplacement: aPseudoRod [
-^aPseudoRod startTime / 1000.0
+^aPseudoRod startTime / self timeScale
 ]
 
 { #category : #drawing }
@@ -58,7 +59,7 @@ PseudoRodTransition >> fromEvent: anObject [
 
 { #category : #drawing }
 PseudoRodTransition >> fromRodLocation [
-^self rodLocation: self fromEvent
+^self pseudoRodLocation: self fromEvent
 ]
 
 { #category : #drawing }
@@ -66,7 +67,10 @@ PseudoRodTransition >> lineEndMarker [
 "Answer the line end marker shape according to the to event type:
 	Goal - circle"
 
-^self toEvent isGoal ifTrue: [ ^RSEllipse new radius: 10; color: self colour ].
+^self toEvent isGoal
+	ifTrue: [ RSEllipse new radius: 10; color: self colour ]
+	ifFalse: [ RSPolygon new points: { -10@0 . 0@ -10 . 10@0 }; color: self colour; size: 20 ]
+
 ]
 
 { #category : #drawing }
@@ -96,10 +100,15 @@ self toEvent printOn: aStream.
 ]
 
 { #category : #drawing }
-PseudoRodTransition >> rodLocation: aPseudoRodEvent [
-"Answer the horizontal displacement of the specified pseudoRod from the origin, team left's goal"
+PseudoRodTransition >> pseudoRodLocation: aPseudoRodEvent [
+"Answer the vertical displacement of the specified pseudoRod from the origin, team two's goal"
 
-^self fromEvent matchState table rodLocation: aPseudoRodEvent
+^aPseudoRodEvent pseudoRodLocation * 20
+]
+
+{ #category : #tuning }
+PseudoRodTransition >> timeScale [
+^300.0
 ]
 
 { #category : #drawing }
@@ -121,5 +130,5 @@ PseudoRodTransition >> toEvent: anObject [
 
 { #category : #drawing }
 PseudoRodTransition >> toRodLocation [
-^self rodLocation: self toEvent
+^self pseudoRodLocation: self toEvent
 ]

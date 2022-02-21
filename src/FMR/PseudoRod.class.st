@@ -33,6 +33,16 @@ PseudoRod >> printPseudoRod [
 ]
 
 { #category : #access }
+PseudoRod >> pseudoRodLocation [
+"Answer the displacement of the specified pseudoRod from team two's goal"
+
+^self distanceToRodOrGoal: (Goal new
+	matchState: self matchState;
+	teamWithPossession_: self matchState teamTwo;
+	yourself)
+]
+
+{ #category : #access }
 PseudoRod >> rduFromGoal: aGoal [
 ^self subclassResponsibility 
 ]

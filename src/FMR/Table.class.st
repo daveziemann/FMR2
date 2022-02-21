@@ -26,16 +26,6 @@ self sideRight: (TableSide new sideIndicator: $>).
 ]
 
 { #category : #printing }
-Table >> printOn1: aStream [
-
-aStream
-	<< (self type,',') asText;
-	<< (self sideLeft colourName asText addAttribute: (TextColor color: self sideLeft colour));
-	<< ',' asText;
-	<< (self sideRight colourName asText addAttribute: (TextColor color: self sideRight colour))
-]
-
-{ #category : #printing }
 Table >> printOn: aStream [
 
 aStream
@@ -52,17 +42,6 @@ Table >> rduSize [
 	- same for all tables"
 	
 ^15
-]
-
-{ #category : #access }
-Table >> rodLocation: aPseudoRodEvent [
-"Answer the horizontal displacement of the specified pseudoRod from the origin, team left's goal"
-
-^(aPseudoRodEvent distanceToRodOrGoal: (Goal new
-	matchState: aPseudoRodEvent matchState;
-	teamWithPossession_: aPseudoRodEvent matchState teamLeft;
-	yourself)) * 20
-		 
 ]
 
 { #category : #accessing }

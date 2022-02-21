@@ -13,33 +13,31 @@ SpPresenterBallTravel >> colourForTeam: aTeamNumber [
 ]
 
 { #category : #drawing }
-SpPresenterBallTravel >> createLineForHandle: aRod [
-| popup line |
-popup := RSPopup text: [''].	
-line := RSLine new
+SpPresenterBallTravel >> createHandle: aRod [
+| popup handle |
+popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
+handle := RSBox new
 	model: aRod;
-	color: aRod colour;
-	startPoint: 0 @ (self matchState table rodLocation: aRod);
-	endPoint: 100 @ (self matchState table rodLocation: aRod);
-	width: 10;	
+	color: (self colourForTeam: aRod teamWithOwnershipIndex);
+	size: 20@100;
 	@ popup;
-	when: RSMouseClick do: [];
+	"when: RSMouseClick do: [];"
 	yourself.
-^line
+^handle
 ]
 
 { #category : #drawing }
 SpPresenterBallTravel >> createLineForRod: aRod [
 | popup line startTime endTime |
-popup := RSPopup text: [''].	
-startTime := aRod matchState matchplayEvents first startTime - 50000 / 1000.0.
-endTime := aRod matchState matchplayEvents last startTime + 50000 / 1000.0.
+popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
+startTime := aRod matchState matchplayEvents first startTime - 50000 / self timeScale.
+endTime := aRod matchState matchplayEvents last startTime + 50000 / self timeScale.
 line := RSLine new
 	model: aRod;
-	color: aRod colour;
-	startPoint: startTime @ (self matchState table rodLocation: aRod);
-	endPoint: endTime @ (self matchState table rodLocation: aRod);
-	width: 2;	
+	color: (self colourForTeam: aRod teamWithOwnershipIndex);
+	startPoint: startTime @ (self pseudoRodLocation: aRod);
+	endPoint: endTime @ (self pseudoRodLocation: aRod);
+	width: 4;	
 	@ popup;
 	when: RSMouseClick do: [];
 	yourself.
@@ -53,20 +51,20 @@ SpPresenterBallTravel >> createRodLines [
 
 rodLines := OrderedCollection new.
 { Rod2.Rod5.Rod3 } do: [ :eachRodClass |
-	| teamLeftRod teamLeftRodLine teamRightRod teamRightRodLine |
-	teamLeftRod := eachRodClass new
+	| teamOneRod teamOneRodLine teamTwoRod teamTwoRodLine |
+	teamOneRod := eachRodClass new
 		matchState: self matchState;
-		teamWithPossession_: self matchState teamLeft;
+		teamWithPossession_: self matchState teamOne;
 		yourself.
-	teamLeftRodLine := self createLineForRod: teamLeftRod.
-	teamLeftRodLine markerStart: (self createLineForHandle: teamLeftRod).
-	teamRightRod := eachRodClass new
+	teamOneRodLine := self createLineForRod: teamOneRod.
+	teamOneRodLine markerStart: (self createHandle: teamOneRod).
+	teamTwoRod := eachRodClass new
 		matchState: self matchState;
-		teamWithPossession_: self matchState teamRight;
+		teamWithPossession_: self matchState teamTwo;
 		yourself.
-	teamRightRodLine := self createLineForRod: teamRightRod.	
-	teamRightRodLine markerStart: (self createLineForHandle: teamRightRod).
-	rodLines add: teamLeftRodLine; add: teamRightRodLine ].
+	teamTwoRodLine := self createLineForRod: teamTwoRod.	
+	teamTwoRodLine markerEnd: (self createHandle: teamTwoRod).
+	rodLines add: teamOneRodLine; add: teamTwoRodLine ].
 ^rodLines
 
 
@@ -126,12 +124,24 @@ SpPresenterBallTravel >> matchState: anObject [
 ]
 
 { #category : #drawing }
+SpPresenterBallTravel >> pseudoRodLocation: aPseudoRodEvent [
+"Answer the vertical displacement of the specified pseudoRod from the origin, team two's goal"
+
+^aPseudoRodEvent pseudoRodLocation * 20
+]
+
+{ #category : #drawing }
 SpPresenterBallTravel >> shapeForTitle [
 ^RSLabel new
 	text: 'DNA for match where ',self matchState matchProgressSummary;
 	fontSize: 16;
 	translateTo: 500@(-250);
 	yourself
+]
+
+{ #category : #drawing }
+SpPresenterBallTravel >> timeScale [
+^300.0
 ]
 
 { #category : #drawing }
