@@ -28,8 +28,8 @@ PseudoRodTransition class >> timeScale [
 { #category : #drawing }
 PseudoRodTransition >> asLine [
 | popup lineStopShortBy line |
-popup := RSPopup text: (self popupText withNoLineLongerThan: 60).
-lineStopShortBy := (self toRodLocation - self fromRodLocation) sign * 10.
+popup := RSPopup text: self popupText.
+lineStopShortBy := (self toRodLocation - self fromRodLocation) sign * 10. "make room for arrow"
 line := RSLine new
 	model: self;
 	color: self colour;
@@ -47,14 +47,34 @@ line markerEnd: self lineEndMarker.
 PseudoRodTransition >> colour [
 "Answer the colour of the line representing this transition"
 
-^self fromEvent isGoal 
-	ifTrue: [ Color transparent ]
-	ifFalse: [ self fromEvent matchState colourForTeam: self fromEvent teamWithOwnershipIndex inGame: 0 ]
+^self fromEvent matchState colourForTeam: self fromEvent teamWithOwnershipIndex inGame: 0
 ]
 
 { #category : #drawing }
 PseudoRodTransition >> elapsedTimeDisplacement: aPseudoRod [
 ^aPseudoRod startTime / self class timeScale
+]
+
+{ #category : #printing }
+PseudoRodTransition >> explainTransition [
+^String streamContents: [  :s | | prep |
+	prep := #(' on ' ' in ') at: self toEvent isGoal asBit + 1.
+	s
+		<< 'The ball started on ';
+		<< self fromEvent teamWithOwnership teamName;
+		<< '''s ';
+		<< self fromEvent printPseudoRod;
+		<< ' and after the transition it was';
+		<< prep;
+		<< self toEvent teamWithOwnership teamName;
+		<< '''s ';
+		<< self toEvent printPseudoRod;
+		<< ' at which time ';
+		<< self toEvent matchProgressSummary;
+		cr; << Character null; cr; "Dumb way to get a blank line"
+		<< 'The angle of the line is proportional to the possession time on the rod the transition is coming from.';
+		cr; << Character null; cr. "Dumb way to get a blank line"
+		self printOn: s ]
 ]
 
 { #category : #drawing }
@@ -99,22 +119,7 @@ PseudoRodTransition >> mouseClickBlock [
 
 { #category : #drawing }
 PseudoRodTransition >> popupText [
-^String streamContents: [  :s |
-	s
-		<< 'The ball started on ';
-		<< self fromEvent teamWithOwnership teamName;
-		<< '''s ';
-		<< self fromEvent printPseudoRod;
-		<< ' and after the transition it was on ';
-		<< self toEvent teamWithOwnership teamName;
-		<< '''s ';
-		<< self toEvent printPseudoRod;
-		<< ' at which time ';
-		<< self toEvent matchProgressSummary;
-		cr; << Character null; cr; "Dumb way to get a blank line"
-		<< 'The angle of the line is proportional to the possession time on the rod the transition is coming from.';
-		cr; << Character null; cr. "Dumb way to get a blank line"
-		self printOn: s ]
+^self explainTransition withNoLineLongerThan: 60
 ]
 
 { #category : #drawing }

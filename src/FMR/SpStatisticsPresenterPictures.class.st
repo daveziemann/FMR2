@@ -17,7 +17,7 @@ self noteBook
 	provider: [ SpPresenterDNA basicNew matchState: self matchState; initialize ];
 
 	addPageTitle: 'Transitions'
-	provider: [ SpPresenterBallTravel basicNew matchState: self matchState; initialize ];
+	provider: [ SpPresenterPseudoRodTransitionChart basicNew matchState: self matchState; initialize ];
 
 	addPageTitle: 'Headline Charts'
 	provider: [ (SpPresenterHeadlineCharts newOn: self matchState) addPageForEachGame ];

@@ -2,6 +2,7 @@ Class {
 	#name : #SpMatchStateTabPresenter,
 	#superclass : #'SpPresenterFMR_',
 	#instVars : [
+		'modelClass',
 		'notebook'
 	],
 	#category : #FMR
@@ -40,10 +41,37 @@ MatchStateEnumerator new allMatchesDo: [ :eachMatchState |
 	n := n+1.
 	self notebook
 		addPageTitle: n asString
+		provider: [ self modelClass basicNew matchState: eachMatchState; initialize ]]
+
+
+
+]
+
+{ #category : #initialization }
+SpMatchStateTabPresenter >> initializePresenters1 [
+| n |
+self notebook: self newNotebook.
+n := 0.
+MatchStateEnumerator new allMatchesDo: [ :eachMatchState |
+	n := n+1.
+	self notebook
+		addPageTitle: n asString
 		provider: [ SpPresenterPossessionFraction basicNew matchState: eachMatchState; initialize ]]
 
 
 
+]
+
+{ #category : #accessing }
+SpMatchStateTabPresenter >> modelClass [
+
+	^ modelClass
+]
+
+{ #category : #accessing }
+SpMatchStateTabPresenter >> modelClass: anObject [
+
+	modelClass := anObject
 ]
 
 { #category : #accessing }

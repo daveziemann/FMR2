@@ -1,5 +1,5 @@
 Class {
-	#name : #SpPresenterBallTravel,
+	#name : #SpPresenterPseudoRodTransitionChart,
 	#superclass : #'SpPresenterFMR_',
 	#instVars : [
 		'matchState'
@@ -7,13 +7,13 @@ Class {
 	#category : #FMR
 }
 
-{ #category : #drawing }
-SpPresenterBallTravel >> colourForTeam: aTeamNumber [
+{ #category : #access }
+SpPresenterPseudoRodTransitionChart >> colourForTeam: aTeamNumber [
 ^self matchState colourForTeam: aTeamNumber inGame: 0
 ]
 
-{ #category : #drawing }
-SpPresenterBallTravel >> createGoalLines [
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createGoalLines [
 | teamOneGoal teamOneGoalLine teamTwoGoal teamTwoGoalLine |
 
 teamOneGoal := Goal new
@@ -31,8 +31,8 @@ teamTwoGoalLine := (self createLineForRod: teamTwoGoal) dashed; width: 8.
 
 ]
 
-{ #category : #drawing }
-SpPresenterBallTravel >> createHandle: aRod [
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createHandleBox: aRod [
 | popup handle |
 popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
 handle := RSBox new
@@ -45,17 +45,17 @@ handle := RSBox new
 ^handle
 ]
 
-{ #category : #drawing }
-SpPresenterBallTravel >> createLineForRod: aRod [
-| popup line startTime endTime |
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createLineForRod: aRod [
+| popup line rodStart rodEnd |
 popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
-startTime := aRod matchState matchplayEvents first startTime - 50000 / PseudoRodTransition timeScale.
-endTime := aRod matchState matchplayEvents last startTime + 50000 / PseudoRodTransition timeScale.
+rodStart := aRod matchState matchplayEvents first startTime - 100000 / PseudoRodTransition timeScale.
+rodEnd := aRod matchState matchplayEvents last startTime + 100000 / PseudoRodTransition timeScale.
 line := RSLine new
 	model: aRod;
 	color: (self colourForTeam: aRod teamWithOwnershipIndex);
-	startPoint: startTime @ (PseudoRodTransition pseudoRodLocation: aRod);
-	endPoint: endTime @ (PseudoRodTransition pseudoRodLocation: aRod);
+	startPoint: rodStart @ (PseudoRodTransition pseudoRodLocation: aRod);
+	endPoint: rodEnd @ (PseudoRodTransition pseudoRodLocation: aRod);
 	width: 4;	
 	@ popup;
 	when: RSMouseClick do: [];
@@ -64,8 +64,8 @@ line := RSLine new
 ^line
 ]
 
-{ #category : #drawing }
-SpPresenterBallTravel >> createRodLines [
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createRodLines [
 | rodLines |
 
 rodLines := OrderedCollection new.
@@ -76,38 +76,56 @@ rodLines := OrderedCollection new.
 		teamWithPossession_: self matchState teamOne;
 		yourself.
 	teamOneRodLine := self createLineForRod: teamOneRod.
-	teamOneRodLine markerStart: (self createHandle: teamOneRod).
+	teamOneRodLine markerStart: (self createHandleBox: teamOneRod).
 	teamTwoRod := eachRodClass new
 		matchState: self matchState;
 		teamWithPossession_: self matchState teamTwo;
 		yourself.
 	teamTwoRodLine := self createLineForRod: teamTwoRod.	
-	teamTwoRodLine markerEnd: (self createHandle: teamTwoRod).
+	teamTwoRodLine markerEnd: (self createHandleBox: teamTwoRod).
 	rodLines add: teamOneRodLine; add: teamTwoRodLine ].
 ^rodLines
 
 
 ]
 
-{ #category : #drawing }
-SpPresenterBallTravel >> createShapes [
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createShapes [
 ^{self createTransitionLines.self createRodLines.self createGoalLines}
 ]
 
-{ #category : #drawing }
-SpPresenterBallTravel >> createTransitionLines [
-^self transitions collect: [ :eachTransition | eachTransition asLine ]
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createTransitionLines [
+^self createTransitions collect: [ :eachTransition | eachTransition asLine ]
+]
+
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createTransitions [
+| transitions fromEvent toEvent |
+
+transitions := OrderedCollection new.
+
+fromEvent := self matchState matchplayEvents first nextPseudoRodEvent.
+[ (toEvent := fromEvent nextPseudoRodEvent) notNil ]	 
+	whileTrue: [
+		fromEvent isGoal ifFalse: [ 
+			transitions add: (PseudoRodTransition new
+				fromEvent: fromEvent;
+				toEvent: toEvent;
+				yourself) ].
+		fromEvent := toEvent ].
+^transitions
 ]
 
 { #category : #drawing }
-SpPresenterBallTravel >> drawShapes: shapes onCanvas: aCanvas [
+SpPresenterPseudoRodTransitionChart >> drawShapes: shapes onCanvas: aCanvas [
 aCanvas addAll: shapes flattened.
 aCanvas @ RSCanvasController.
 aCanvas @ RSScrollBarsCanvasInteraction
 ]
 
 { #category : #initialization }
-SpPresenterBallTravel >> initializePresenters [
+SpPresenterPseudoRodTransitionChart >> initializePresenters [
 | rp |
 rp := self instantiate: SpRoassalPresenter.
 rp script: [ :canvas | self drawShapes: self createShapes flattened onCanvas: canvas.
@@ -119,7 +137,7 @@ self layout: (SpBoxLayout newLeftToRight hAlignStart
 ]
 
 { #category : #drawing }
-SpPresenterBallTravel >> legendTeams [
+SpPresenterPseudoRodTransitionChart >> legendTeams [
 | legend |
 
 legend := RSLegend new.
@@ -131,39 +149,22 @@ legend text: self matchState teamTwo teamName withBoxColor: (self colourForTeam:
 ]
 
 { #category : #accessing }
-SpPresenterBallTravel >> matchState [
+SpPresenterPseudoRodTransitionChart >> matchState [
 
 	^ matchState
 ]
 
 { #category : #accessing }
-SpPresenterBallTravel >> matchState: anObject [
+SpPresenterPseudoRodTransitionChart >> matchState: anObject [
 
 	matchState := anObject
 ]
 
 { #category : #drawing }
-SpPresenterBallTravel >> shapeForTitle [
+SpPresenterPseudoRodTransitionChart >> shapeForTitle [
 ^RSLabel new
 	text: 'Ball Transitions for match where ',self matchState matchProgressSummary;
 	fontSize: 16;
 	translateTo: 500@(-120);
 	yourself
-]
-
-{ #category : #drawing }
-SpPresenterBallTravel >> transitions [
-| transitions fromEvent toEvent |
-
-transitions := OrderedCollection new.
-
-fromEvent := self matchState matchplayEvents first nextPseudoRodEvent.
-[ (toEvent := fromEvent nextPseudoRodEvent) notNil ]	 
-	whileTrue: [ 
-		transitions add: (PseudoRodTransition new
-			fromEvent: fromEvent;
-			toEvent: toEvent;
-			yourself).
-		fromEvent := toEvent ].
-^transitions
 ]

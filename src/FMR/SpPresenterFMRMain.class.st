@@ -1590,12 +1590,17 @@ SpPresenterFMRMain >> subMenuAnalyseDatabase [
 				action: [ self viewAllPossessionTimeFractions ] ];
 		addItem: [ :item | 
 			item
+				name: 'View all Transition Charts';
+				icon: (self iconNamed: #database);
+				action: [ self viewAllTransitionCharts ] ];
+		addItem: [ :item | 
+			item
 				name: 'Top Win-correlating Statistics';
 				icon: (self iconNamed: #database);
 				action: [ self generateAndOpenWinCorrelates ] ];
 		yourself
 		
-	
+
 
 ]
 
@@ -1925,9 +1930,16 @@ canvas openWithTitle: 'Viewing Goal Ladders for All Recordings'
 
 { #category : #'menu actions' }
 SpPresenterFMRMain >> viewAllPossessionTimeFractions [
-SpMatchStateTabPresenter new openWithSpec
+(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPossessionFraction) initialize openWithSpec
 	title: 'Trawl Possession Time Limit Fraction';
-	extent: 1400@900.
+	extent: 1800@900.
+]
+
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> viewAllTransitionCharts [
+(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPseudoRodTransitionChart) initialize openWithSpec
+	title: 'Transition Charts';
+	extent: 1800@900.
 ]
 
 { #category : #'update UI' }
