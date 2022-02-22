@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #drawing }
+PseudoRodTransition class >> elapsedTimeDisplacement: aPseudoRod [
+^aPseudoRod startTime / self timeScale
+]
+
+{ #category : #drawing }
 PseudoRodTransition class >> pseudoRodLocation: aPseudoRodEvent [
 "Answer the vertical displacement of the specified pseudoRod from the origin, team two's goal"
 
@@ -50,11 +55,6 @@ PseudoRodTransition >> colour [
 ^self fromEvent matchState colourForTeam: self fromEvent teamWithOwnershipIndex inGame: 0
 ]
 
-{ #category : #drawing }
-PseudoRodTransition >> elapsedTimeDisplacement: aPseudoRod [
-^aPseudoRod startTime / self class timeScale
-]
-
 { #category : #printing }
 PseudoRodTransition >> explainTransition [
 ^String streamContents: [  :s | | prep |
@@ -79,7 +79,7 @@ PseudoRodTransition >> explainTransition [
 
 { #category : #drawing }
 PseudoRodTransition >> fromElapsedTimeDisplacement [
-^self elapsedTimeDisplacement: self fromEvent
+^self class elapsedTimeDisplacement: self fromEvent
 ]
 
 { #category : #accessing }
@@ -133,7 +133,7 @@ aStream
 
 { #category : #drawing }
 PseudoRodTransition >> toElapsedTimeDisplacement [
-^self elapsedTimeDisplacement: self toEvent
+^self class elapsedTimeDisplacement: self toEvent
 ]
 
 { #category : #accessing }

@@ -13,18 +13,38 @@ SpPresenterPseudoRodTransitionChart >> colourForTeam: aTeamNumber [
 ]
 
 { #category : #creation }
+SpPresenterPseudoRodTransitionChart >> createEndGameLines [
+| teamOneGoal teamTwoGoal endGameLines popup |
+
+teamOneGoal := self pseudoRod: Goal team: 1.
+teamTwoGoal := self pseudoRod: Goal team: 2.
+
+popup := RSPopup text: [ :ege | ege explainEvent ].
+endGameLines := (self matchState endGameEvents removeLast; yourself) collect: [ :eege |
+	| endGameLocation endGameLine |
+	endGameLocation := {PseudoRodTransition elapsedTimeDisplacement: eege . PseudoRodTransition elapsedTimeDisplacement: eege nextPseudoRodEvent} average.
+	endGameLine := RSLine new
+		model: eege;
+		color: Color gray;
+		startPoint: endGameLocation @ (PseudoRodTransition pseudoRodLocation: teamOneGoal);
+		endPoint: endGameLocation @ (PseudoRodTransition pseudoRodLocation: teamTwoGoal);
+		width: 1;	
+		dashed;
+		@ popup;
+		when: RSMouseClick do: self mouseClickBlock;
+		yourself ].
+
+^endGameLines
+
+]
+
+{ #category : #creation }
 SpPresenterPseudoRodTransitionChart >> createGoalLines [
 | teamOneGoal teamOneGoalLine teamTwoGoal teamTwoGoalLine |
 
-teamOneGoal := Goal new
-	matchState: self matchState;
-	teamWithPossession_: self matchState teamOne;
-	yourself.
+teamOneGoal := self pseudoRod: Goal team: 1.
+teamTwoGoal := self pseudoRod: Goal team: 2.
 teamOneGoalLine := (self createLineForRod: teamOneGoal) dashed; width: 8.
-teamTwoGoal := Goal new
-	matchState: self matchState;
-	teamWithPossession_: self matchState teamTwo;
-	yourself.
 teamTwoGoalLine := (self createLineForRod: teamTwoGoal) dashed; width: 8.
 
 ^{teamOneGoalLine.teamTwoGoalLine}
@@ -34,7 +54,7 @@ teamTwoGoalLine := (self createLineForRod: teamTwoGoal) dashed; width: 8.
 { #category : #creation }
 SpPresenterPseudoRodTransitionChart >> createHandleBox: aRod [
 | popup handle |
-popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod].	
+popup := RSPopup text: [ :rod | rod teamWithOwnership teamName,'''s ',rod printPseudoRod ].	
 handle := RSBox new
 	model: aRod;
 	color: (self colourForTeam: aRod teamWithOwnershipIndex);
@@ -58,7 +78,7 @@ line := RSLine new
 	endPoint: rodEnd @ (PseudoRodTransition pseudoRodLocation: aRod);
 	width: 4;	
 	@ popup;
-	when: RSMouseClick do: [];
+	"when: RSMouseClick do: [];"
 	yourself.
 "line markerEnd: self lineEndMarker."
 ^line
@@ -71,16 +91,10 @@ SpPresenterPseudoRodTransitionChart >> createRodLines [
 rodLines := OrderedCollection new.
 { Rod2.Rod5.Rod3 } do: [ :eachRodClass |
 	| teamOneRod teamOneRodLine teamTwoRod teamTwoRodLine |
-	teamOneRod := eachRodClass new
-		matchState: self matchState;
-		teamWithPossession_: self matchState teamOne;
-		yourself.
+	teamOneRod := self pseudoRod: eachRodClass team: 1.
 	teamOneRodLine := self createLineForRod: teamOneRod.
 	teamOneRodLine markerStart: (self createHandleBox: teamOneRod).
-	teamTwoRod := eachRodClass new
-		matchState: self matchState;
-		teamWithPossession_: self matchState teamTwo;
-		yourself.
+	teamTwoRod := self pseudoRod: eachRodClass team: 2.
 	teamTwoRodLine := self createLineForRod: teamTwoRod.	
 	teamTwoRodLine markerEnd: (self createHandleBox: teamTwoRod).
 	rodLines add: teamOneRodLine; add: teamTwoRodLine ].
@@ -91,7 +105,7 @@ rodLines := OrderedCollection new.
 
 { #category : #creation }
 SpPresenterPseudoRodTransitionChart >> createShapes [
-^{self createTransitionLines.self createRodLines.self createGoalLines}
+^{self createTransitionLines.self createRodLines.self createGoalLines.self createEndGameLines}
 ]
 
 { #category : #creation }
@@ -158,6 +172,21 @@ SpPresenterPseudoRodTransitionChart >> matchState [
 SpPresenterPseudoRodTransitionChart >> matchState: anObject [
 
 	matchState := anObject
+]
+
+{ #category : #drawing }
+SpPresenterPseudoRodTransitionChart >> mouseClickBlock [
+"Open the owning match state UI and highlight the matchplay event underlying the clicked shape"
+
+^[ :event | event shape model matchState open highlightMatchplayEvent: event shape model ]
+]
+
+{ #category : #creation }
+SpPresenterPseudoRodTransitionChart >> pseudoRod: aPsedoRodClass team: teamNumber [
+^aPsedoRodClass new
+	matchState: self matchState;
+	teamWithPossession_: (self matchState teams at: teamNumber);
+	yourself
 ]
 
 { #category : #drawing }
