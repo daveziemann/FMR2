@@ -193,6 +193,8 @@ MatchState >> cleanMatchplayEventCommandLines [
 newMatchDetails := self matchDetailsCommandsFromStatePack.
 newMatchplayEvents := newMatchDetails, (self matchplayEvents reject: [ :eachMatchplayEvent | eachMatchplayEvent isCommandLine ]).
 self matchplayEvents removeAll; addAll: newMatchplayEvents.
+"Inserting events eans we must clear the event indices"
+self flushCaches.
 ]
 
 { #category : #files }
