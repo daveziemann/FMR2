@@ -4,12 +4,6 @@ Class {
 	#category : #FMR
 }
 
-{ #category : #printing }
-SwapSides >> colour [
-
-^FMRColour neutralColour
-]
-
 { #category : #'UI - graphics' }
 SwapSides >> explainEvent [
 ^'The two teams swapped table sides'

@@ -9,12 +9,6 @@ EndMatch class >> representation [
 ^'//'
 ]
 
-{ #category : #printing }
-EndMatch >> colour [
-
-^FMRColour neutralColour
-]
-
 { #category : #'UI - graphics' }
 EndMatch >> explainEvent [
 ^'The end of the match'

@@ -1701,7 +1701,7 @@ SpPresenterFMRMain >> subMenuHelp [
 						action: [ self openHintSheet ]];
 				addItem: [ :item |
 					item
-						name: 'Example Common Recording Sequences';
+						name: 'Common Matchplay Idioms';
 						icon: (self iconNamed: #book);
 						action: [ self openCommonSequences ]];					
 		

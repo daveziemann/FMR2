@@ -110,9 +110,9 @@ MatchplayEvent >> boxColour [
 ]
 
 { #category : #printing }
-MatchplayEvent >> colour [ 
+MatchplayEvent >> colour [
 
-^self sideWithPossession colour
+^FMRColour neutralColour
 ]
 
 { #category : #copying }

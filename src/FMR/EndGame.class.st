@@ -24,12 +24,6 @@ EndGame >> asTextWithAttributes: aString [
 	
 ]
 
-{ #category : #printing }
-EndGame >> colour [
-
-^FMRColour neutralColour
-]
-
 { #category : #'UI - graphics' }
 EndGame >> explainEvent [
 ^'The end of game ',self gameNumber asString

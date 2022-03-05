@@ -195,7 +195,7 @@ textField text: self asText
 
 { #category : #documents }
 FMRDocument >> recordingCommonSequences [
-^'Common Matchplay Event Sequences
+^'Common Matchplay Idioms
 [Sequence	When you might type it]
 {53#}			5-rod pass to 3-rod and score...
 {.5}			...then ball goes to other team''s 5-rod for the next kick-off

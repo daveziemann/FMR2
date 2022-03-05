@@ -9,6 +9,12 @@ PseudoRod class >> printPseudoRod [
 ^self subclassResponsibility 
 ]
 
+{ #category : #printing }
+PseudoRod >> colour [ 
+
+^self sideWithPossession colour 
+]
+
 { #category : #access }
 PseudoRod >> distanceToRodOrGoal: anotherRodOrGoal [
 ^(self rduToRodOrGoal: anotherRodOrGoal) * self matchState table rduSize

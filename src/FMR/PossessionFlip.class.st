@@ -9,6 +9,12 @@ PossessionFlip class >> representation [
 ^$.
 ]
 
+{ #category : #printing }
+PossessionFlip >> colour [ 
+
+^self sideWithPossession colour 
+]
+
 { #category : #'UI - graphics' }
 PossessionFlip >> explainEvent [
 ^'The team with possession changed to ',self teamWithOwnership teamName

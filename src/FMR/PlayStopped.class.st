@@ -16,12 +16,6 @@ PlayStopped >> boxColour [
 ^FMRColour neutralColour
 ]
 
-{ #category : #printing }
-PlayStopped >> colour [
-
-^FMRColour neutralColour
-]
-
 { #category : #'UI - graphics' }
 PlayStopped >> explainEvent [
 ^'There was a stoppage of play'
