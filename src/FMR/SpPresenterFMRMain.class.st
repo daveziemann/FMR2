@@ -1104,11 +1104,11 @@ SpPresenterFMRMain >> processCharacterAdded: characterAdded [
 self isCommandMode ifTrue: [ ^self ].
 
 "Detail mode - entering - set comment mode ON"
-self isDetailMode not & (characterAdded=$[) ifTrue: [ ^self isDetailMode: true ].
+self isDetailMode not & (characterAdded = $[) ifTrue: [ ^self isDetailMode: true ].
 "Detail mode - during - Ignore characters"
-self isDetailMode & (characterAdded~=$]) ifTrue: [ ^self ].
+self isDetailMode & (characterAdded ~= $]) ifTrue: [ ^self ].
 "Detail mode - exiting - modify the last event with the specified detail"
-self isDetailMode & (characterAdded=$]) ifTrue: [
+self isDetailMode & (characterAdded = $]) ifTrue: [
 	self isDetailMode: false.
 	detailText := self recordingInputField text allButLast copyAfterLast: $[.
 	^self matchState latestMatchplayEventDo: [ :lme | lme detail: detailText ] ifNone: []].
@@ -1124,7 +1124,11 @@ self isDetailMode & (characterAdded=$]) ifTrue: [
 	ifTrue: [
 		self feedbackLabel label: 'Repeated event ignored: ',characterAdded asString.
 		^self deleteLastCharacter ].
-
+(self previousCharacter = $. & ('253#' includes: characterAdded) not)
+	ifTrue: [
+		self feedbackLabel label: 'Only 2, 5, 3 or # can follow possession change event: ',characterAdded asString.
+		^self deleteLastCharacter ].
+	
 "Create the matchplay event for the entered character"
 matchplayEvent := MatchplayEvent newFromCharacter: characterAdded inMatchState: self matchState.
 self addMatchplayEvent: matchplayEvent.
