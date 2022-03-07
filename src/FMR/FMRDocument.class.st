@@ -22,12 +22,6 @@ FMRDocument class >> on: aSelector [
 ]
 
 { #category : #API }
-FMRDocument class >> openBriefHintSheet [
-((self on: #recordingHintSheetBrief) extent: 500@350) beTitleFromText openTextWindow
-
-]
-
-{ #category : #API }
 FMRDocument class >> openCommonSequences [
 ((self on: #recordingCommonSequences) extent: 550@460) beTitleFromText beParseMatchplay openTextWindow
 
@@ -48,7 +42,7 @@ self openWindowTitle: 'Help - ',(text copyUpTo: Character cr) text: text extent:
 
 { #category : #API }
 FMRDocument class >> openHintSheet [
-((self on: #recordingHintSheet) extent: 600@800) beTitleFromText openTextWindow
+((self on: #recordingHintSheet) extent: 900@750) beTitleFromText openTextWindow
 ]
 
 { #category : #API }
@@ -276,6 +270,48 @@ t		Time-out on current rod				Paused Play begins
 s		Play stopped for another reason		Paused Play begins
 
 [Paused Play Events
+Paused Play Events record events during Paused Play; they are entered with one or two keystrokes, on their own on a single input line.
+The angle bracket indicates whether the event refers to the team on the left side of the table (<) or the team on the right side of the table (>).
+
+Keys		Event]
+/			End of game (enter after the last goal of the game)
+//			End of match (enter after the last game of the match)
+<t	>t		Time-out by team on specified side
+<!	>!		Infraction by team on specified side
+<r	>r		Referee request by team on specified side
+<:	>:		Players in team on the specified side swap positions (doubles)
+<>			Teams swaps sides of the table (between games)
+
+[Magic Keys
+Magic Keys do not represent matchplay events but provide other functionality. The entered keystroke does not appear in either the Input or the Output Field.
+
+Key			Action]
+?			Open this Hint sheet window
+r			Reset the matchplay timer (but keep it running)
+p			Pause the matchplay timer (you can pause or rewind the video)
+f			Flag the latest event for later review (flagged events are highlighted in the Lines display)
+'
+]
+
+{ #category : #documents }
+FMRDocument >> recordingHintSheet1 [
+^'Matchplay Recording Hint Sheet
+[Active Play Events
+Active Play Events record events that occur during active play and are entered using one keystroke.
+
+Key 		Event								What happens next]
+2		Begin possession on 2-rod				Active Play continues
+5		Begin possession on 5-rod				Active Play continues
+3		Begin possession on 3-rod				Active Play continues
+.		Possession changed between teams	Active Play continues
+#		Goal scored							Paused Play begins
+^		Ball off table							Paused Play begins
+_		Dead ball							Paused Play begins
+t		Time-out on current rod				Paused Play begins
+!		Infraction							Paused Play begins
+s		Play stopped for another reason		Paused Play begins
+
+[Paused Play Events
 Paused Play Events record events during Paused Play; they are entered with one or two keystrokes,
 on their own on a single input line. The angle bracket indicates whether the event
 refers to the team on the left side of the table (<) or the team on the right side of the table (>).
@@ -295,30 +331,10 @@ keystroke does not appear in either the Input or the Output Field.
 
 Key			Action]
 ?			Open this Hint sheet window
+r			Reset the matchplay timer (but keep it running)
+p			Pause the matchplay timer (you can pause or rewind the video)
 f			Flag the latest event for later review; flagged events are highlighted in the Lines display
-p			Pause the matchplay timer so you can pause and rewind the video
-z			Zero the matchplay timer but keep it running
-
 '
-]
-
-{ #category : #documents }
-FMRDocument >> recordingHintSheetBrief [
-^'Matchplay Recording Hint Sheet (Beginner)
-[You only need to know these five keystrokes to start recording...
-
-Key 		Event								What happens next]
-2		Begin possession on 2-rod				Active Play continues
-5		Begin possession on 5-rod				Active Play continues
-3		Begin possession on 3-rod				Active Play continues
-.		Possession changed between teams	Active Play continues
-#		Goal scored							Paused Play begins (press Enter)
-
-[...and these two Paused Play commands which end a game or the match...
-
-Key			Event]
-/			End of game (enter after the last goal of the game)
-//			End of match (enter after the last game of the match)'
 ]
 
 { #category : #utilities }

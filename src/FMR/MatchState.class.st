@@ -505,7 +505,7 @@ MatchState >> matchStatusSummary [
 	ifNil: [ 'Matchplay recording not started' ]
 	ifNotNil: [ :lme | lme isEndMatch
 		ifTrue: [ 'Matchplay recording complete' ]
-		ifFalse: [ 'Matchplay recording in progress' ]]
+		ifFalse: [ lme explainEventWithDetail ]]
 ]
 
 { #category : #accessing }

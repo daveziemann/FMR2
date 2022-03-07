@@ -330,7 +330,7 @@ SpPresenterFMRMain >> flagLatestEvent [
 self matchState
 	latestMatchplayEventDo: [ :lme |
 		lme setFlag.
-		self feedbackLabel label: 'Event flagged: ',lme printFully ]
+		self feedbackLabel label: 'f: flagged event: ',lme printFully ]
 	ifNone: []
 ]
 
@@ -400,11 +400,6 @@ SpPresenterFMRMain >> headlinePresenter [
 SpPresenterFMRMain >> headlinePresenter: anObject [
 
 	headlinePresenter := anObject
-]
-
-{ #category : #help }
-SpPresenterFMRMain >> helpHints [
-^' Type ? for help, z to zero the timer, p to pause the timer.'
 ]
 
 { #category : #help }
@@ -714,7 +709,7 @@ SpPresenterFMRMain >> isFirstCharacterOfLine [
 SpPresenterFMRMain >> isMagicKey [
 "Answer if the added character is a magic key"
 
-^'pzf?' includes: self characterAdded
+^'rpf?' includes: self characterAdded
 ]
 
 { #category : #testing }
@@ -736,6 +731,15 @@ Empty clipboard if CTRL- to prevent pasting"
 
 (#(80 82) includes: anEvent scanCode) ifTrue: [ ^self setCursorToEnd ].
 (#(224 228) includes: anEvent scanCode) ifTrue: [ ^Clipboard clipboardText: '' ].
+]
+
+{ #category : #'processing - real time' }
+SpPresenterFMRMain >> latestEventFeedback [
+self matchState
+	latestMatchplayEventDo: [ :lme | self feedbackLabel label: lme explainEventWithDetail ]
+	ifNone: [ ]
+
+
 ]
 
 { #category : #accessing }
@@ -796,7 +800,7 @@ Transcript clear
 SpPresenterFMRMain >> matchResultSummary [
 ^self matchState isEndMatch 
 	ifTrue: [ self matchState matchStatusSummary,': ',self matchState matchProgressSummary ]
-	ifFalse: [ self matchState matchStatusSummary,'. ',self matchState matchDetailsStatus,self helpHints ]
+	ifFalse: [ self matchState matchStatusSummary,'. ',self matchState matchDetailsStatus ]
 ]
 
 { #category : #accessing }
@@ -984,11 +988,6 @@ SpPresenterFMRMain >> oldInputString: anObject [
 ]
 
 { #category : #'menu actions' }
-SpPresenterFMRMain >> openBriefHintSheet [
-FMRDocument openBriefHintSheet
-]
-
-{ #category : #'menu actions' }
 SpPresenterFMRMain >> openChart [
 
 self matchState openWebBrowserOnURLChart.
@@ -1025,7 +1024,6 @@ SpPresenterFMRMain >> openRecordingHelps [
 self
 	openFMRFeatures;
 	openRecordingFundamentals;
-	openBriefHintSheet;
 	openHintSheet;
 	openCommonSequences
 ]
@@ -1036,10 +1034,10 @@ SpPresenterFMRMain >> pauseTimer [
 self matchState matchplayTimer isRunning
 	ifTrue: [
 		self matchState matchplayTimer stop.
-		self feedbackLabel label: 'Timer paused while you rewind the video. Timer will restart when you type p again or enter the next matchplay event.' ]
+		self feedbackLabel label: 'p: timer paused; you can pause or rewind the video. Timer will restart when you type p again or enter the next matchplay event.' ]
 	ifFalse: [
 		self matchState matchplayTimer start.
-		self feedbackLabel label: 'Timer restarted.' ]
+		self feedbackLabel label: 'p: timer restarted.' ]
 		
 ]
 
@@ -1120,7 +1118,7 @@ self isDetailMode & (characterAdded = $]) ifTrue: [
 		^self deleteLastCharacter ].
 
 "Undo anything we recognise but don't like and quit"
-(self previousCharacter = characterAdded)
+(self previousCharacter = characterAdded & ('253' includes: characterAdded) not)
 	ifTrue: [
 		self feedbackLabel label: 'Repeated event ignored: ',characterAdded asString.
 		^self deleteLastCharacter ].
@@ -1132,7 +1130,7 @@ self isDetailMode & (characterAdded = $]) ifTrue: [
 "Create the matchplay event for the entered character"
 matchplayEvent := MatchplayEvent newFromCharacter: characterAdded inMatchState: self matchState.
 self addMatchplayEvent: matchplayEvent.
-self feedbackLabel label: ''.
+self latestEventFeedback
 
 
 ]
@@ -1162,7 +1160,8 @@ SpPresenterFMRMain >> processCharacterDeleted: deletedCharacter [
 			ifNil: [ self error: 'Wants to delete an event we don''t have' ]
 			ifNotNil: [ :lme | lme representation = deletedCharacter
 				ifTrue: [ self matchState deleteLatestMatchplayEvent ]
-				ifFalse: [ self error: 'Wants to delete an event that doesn''t match the deleted character' ]]]
+				ifFalse: [ self error: 'Wants to delete an event that doesn''t match the deleted character' ]]].
+self latestEventFeedback
 		
 		
 		
@@ -1185,11 +1184,11 @@ self updateUIState.
 SpPresenterFMRMain >> processMagicKey [
 "Process a magic key"
 
+"r to reset the timer on the ticking event"
+self characterAdded = $r ifTrue: [ ^self resetTimer; deleteLastCharacter ].
+
 "p to pause the timer so you can rewind the video"
 self characterAdded = $p ifTrue: [ ^self pauseTimer; deleteLastCharacter ].
-
-"z to reset the timer on the ticking event"
-self characterAdded = $z ifTrue: [ ^self resetTimer; deleteLastCharacter ].
 
 "f to flag the event"
 self characterAdded = $f ifTrue: [ ^self flagLatestEvent; deleteLastCharacter ].
@@ -1398,7 +1397,7 @@ SpPresenterFMRMain >> resetTimer [
 self matchState matchplayTimer isRunning
 	ifTrue: [
 		self matchState durationSinceLastQuery.
-		self feedbackLabel label: 'Timer reset to zero.' ]
+		self feedbackLabel label: 'r: timer reset.' ]
 ]
 
 { #category : #'menu actions' }
@@ -1695,12 +1694,7 @@ SpPresenterFMRMain >> subMenuHelp [
 						action: [ self openRecordingFundamentals ]];
 				addItem: [ :item |
 					item
-						name: 'Recording Hint Sheet (Brief)';
-						icon: (self iconNamed: #book);
-						action: [ self openBriefHintSheet ]];
-				addItem: [ :item |
-					item
-						name: 'Recording Hint Sheet (Complete)';
+						name: 'Matchplay Recording Hint Sheet';
 						icon: (self iconNamed: #book);
 						action: [ self openHintSheet ]];
 				addItem: [ :item |
