@@ -688,6 +688,13 @@ SpPresenterFMRMain >> isCommandMode [
 ]
 
 { #category : #testing }
+SpPresenterFMRMain >> isCommentMode [
+^self newInputString
+	ifEmpty: [ false ]
+	ifNotEmpty: [ self newInputString first = $" ]
+]
+
+{ #category : #testing }
 SpPresenterFMRMain >> isDetailMode [
 ^isDetailMode ifNil: [ false ]
 ]
@@ -703,13 +710,6 @@ SpPresenterFMRMain >> isFirstCharacterOfLine [
 "Answer if the input field was empty and a new character has been typed"
 
 ^self newInputString size = 1 & self oldInputString isEmpty
-]
-
-{ #category : #testing }
-SpPresenterFMRMain >> isMagicKey [
-"Answer if the added character is a magic key"
-
-^'rpf?' includes: self characterAdded
 ]
 
 { #category : #testing }
@@ -1182,20 +1182,27 @@ self updateUIState.
 
 { #category : #'processing - real time' }
 SpPresenterFMRMain >> processMagicKey [
-"Process a magic key"
+"Process a possible magic key and answer if we did"
+
+"Exit if not a magic key"
+('rpf?' includes: self characterAdded) ifFalse: [ ^false ].
+
+"Ignore magic key if we are in comment mode, detail mode or command mode"
+self isCommentMode | self isDetailMode | self isCommandMode ifTrue: [ ^false ].
 
 "r to reset the timer on the ticking event"
-self characterAdded = $r ifTrue: [ ^self resetTimer; deleteLastCharacter ].
+self characterAdded = $r ifTrue: [ self resetTimer; deleteLastCharacter ].
 
 "p to pause the timer so you can rewind the video"
-self characterAdded = $p ifTrue: [ ^self pauseTimer; deleteLastCharacter ].
+self characterAdded = $p ifTrue: [ self pauseTimer; deleteLastCharacter ].
 
 "f to flag the event"
-self characterAdded = $f ifTrue: [ ^self flagLatestEvent; deleteLastCharacter ].
+self characterAdded = $f ifTrue: [ self flagLatestEvent; deleteLastCharacter ].
 
 "? to open the hint sheet"
-self characterAdded = $? ifTrue: [ ^self openHintSheet; deleteLastCharacter ].
+self characterAdded = $? ifTrue: [ self openHintSheet; deleteLastCharacter ].
 
+^true
 ]
 
 { #category : #'processing - real time' }
@@ -1212,7 +1219,7 @@ self newInputString: newString.
 
 self oldInputString = self newInputString ifTrue: [ ^self ].
 
-self isMagicKey & (self isDetailMode not) & (self isCommandMode not) ifTrue: [ ^self processMagicKey ].
+self processMagicKey ifTrue: [ ^self ].
 
 "If we are not in Active Recording mode, then ignore keystrokes until CR pressed"
 self isActivePlayRecording ifFalse: [

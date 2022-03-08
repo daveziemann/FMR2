@@ -84,7 +84,7 @@ line := RSLine new
 ^line
 ]
 
-{ #category : #creation }
+{ #category : #drawing }
 SpPresenterPseudoRodTransitionChart >> createRodLines [
 | rodLines |
 
