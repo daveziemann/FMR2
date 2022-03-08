@@ -26,6 +26,16 @@ PSScoringFrom3Rod >> awardName [
 ^'Best Ever 3-rod Scoring Rate'
 ]
 
+{ #category : #generation }
+PSScoringFrom3Rod >> computeResult [
+| results |
+
+results := self sequences collect: [ :eachSequence |
+	(self scanner sequence: eachSequence) scan firstAndLastSequenceSize ].
+
+^{results first first.results sum second}
+]
+
 { #category : #'headline statistics' }
 PSScoringFrom3Rod >> headlineStatisticName [
 "Only statsitics which return a non-empty string here are used for headline results,
@@ -35,6 +45,9 @@ PSScoringFrom3Rod >> headlineStatisticName [
 ]
 
 { #category : #generation }
-PSScoringFrom3Rod >> sequence [
-^'3c|#'
+PSScoringFrom3Rod >> sequences [
+^#(
+	'3c|#'				"Clean goal from a controlled possession"
+	'3c|2u|.|#'		"Deflection goal from a controlled possession"
+)
 ]
