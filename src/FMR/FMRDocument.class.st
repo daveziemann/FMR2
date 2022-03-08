@@ -257,30 +257,30 @@ FMRDocument >> recordingHintSheet [
 [Active Play Events
 Active Play Events record events that occur during active play and are entered using one keystroke.
 
-Key 		Event								What happens next]
-2		Begin possession on 2-rod				Active Play continues
-5		Begin possession on 5-rod				Active Play continues
-3		Begin possession on 3-rod				Active Play continues
-.		Possession changed between teams	Active Play continues
-#		Goal scored							Paused Play begins
-^		Ball off table							Paused Play begins
-_		Dead ball							Paused Play begins
-t		Time-out on current rod				Paused Play begins
-!		Infraction							Paused Play begins
-s		Play stopped for another reason		Paused Play begins
+Key 		Event								Matchplay status during event]
+2		Begin possession on 2-rod				Active play
+5		Begin possession on 5-rod				Active play
+3		Begin possession on 3-rod				Active play
+.		Possession changed between teams	Active play
+#		Goal scored							Pause
+^		Ball off table							Pause
+_		Dead ball							Pause
+t		Time-out on current rod				Pause
+!		Infraction							Pause
+s		Play stopped for another reason		Pause
 
 [Paused Play Events
-Paused Play Events record events during Paused Play; they are entered with one or two keystrokes, on their own on a single input line.
-The angle bracket indicates whether the event refers to the team on the left side of the table (<) or the team on the right side of the table (>).
+Paused Play Events record events during pauses; they are entered with one or two keystrokes, on their own on a single input line.
+The angle bracket identifies the team to which the event relates; < indicates the team on the left, > indicates the team on the right.
 
 Keys		Event]
-/			End of game (enter after the last goal of the game)
-//			End of match (enter after the last game of the match)
 <t	>t		Time-out by team on specified side
 <!	>!		Infraction by team on specified side
 <r	>r		Referee request by team on specified side
 <:	>:		Players in team on the specified side swap positions (doubles)
 <>			Teams swaps sides of the table (between games)
+/			End game (after the last goal of the game)
+//			End match (after the last game of the match)
 
 [Magic Keys
 Magic Keys do not represent matchplay events but provide other functionality. The entered keystroke does not appear in either the Input or the Output Field.
@@ -290,50 +290,6 @@ Key			Action]
 r			Reset the matchplay timer (but keep it running)
 p			Pause the matchplay timer (you can pause or rewind the video)
 f			Flag the latest event for later review (flagged events are highlighted in the Lines display)
-'
-]
-
-{ #category : #documents }
-FMRDocument >> recordingHintSheet1 [
-^'Matchplay Recording Hint Sheet
-[Active Play Events
-Active Play Events record events that occur during active play and are entered using one keystroke.
-
-Key 		Event								What happens next]
-2		Begin possession on 2-rod				Active Play continues
-5		Begin possession on 5-rod				Active Play continues
-3		Begin possession on 3-rod				Active Play continues
-.		Possession changed between teams	Active Play continues
-#		Goal scored							Paused Play begins
-^		Ball off table							Paused Play begins
-_		Dead ball							Paused Play begins
-t		Time-out on current rod				Paused Play begins
-!		Infraction							Paused Play begins
-s		Play stopped for another reason		Paused Play begins
-
-[Paused Play Events
-Paused Play Events record events during Paused Play; they are entered with one or two keystrokes,
-on their own on a single input line. The angle bracket indicates whether the event
-refers to the team on the left side of the table (<) or the team on the right side of the table (>).
-
-Keys		Event]
-/			End of game (enter after the last goal of the game)
-//			End of match (enter after the last game of the match)
-<t	>t		Time-out by team on specified side
-<!	>!		Infraction by team on specified side
-<r	>r		Referee request by team on specified side
-<:	>:		Players in team on the specified side swap positions (doubles)
-<>			Teams swaps sides of the table (between games)
-
-[Magic Keys
-Magic Keys do not represent matchplay events but provide other functionality. The entered
-keystroke does not appear in either the Input or the Output Field.
-
-Key			Action]
-?			Open this Hint sheet window
-r			Reset the matchplay timer (but keep it running)
-p			Pause the matchplay timer (you can pause or rewind the video)
-f			Flag the latest event for later review; flagged events are highlighted in the Lines display
 '
 ]
 

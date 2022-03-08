@@ -719,6 +719,13 @@ SpPresenterFMRMain >> isPausedPlayRecording [
 	ifNotEmpty: [ 's/<>@"' includes: self newInputString first ]
 ]
 
+{ #category : #testing }
+SpPresenterFMRMain >> isTeamEvent [
+^self newInputString
+	ifEmpty: [ false ]
+	ifNotEmpty: [ '<>' includes: self newInputString first ]
+]
+
 { #category : #'update UI' }
 SpPresenterFMRMain >> keyDown: anEvent [
 "Undo cursor movement which would moe the cursor before the last character
@@ -1190,8 +1197,8 @@ SpPresenterFMRMain >> processMagicKey [
 "Ignore magic key if we are in comment mode, detail mode or command mode"
 self isCommentMode | self isDetailMode | self isCommandMode ifTrue: [ ^false ].
 
-"r to reset the timer on the ticking event"
-self characterAdded = $r ifTrue: [ self resetTimer; deleteLastCharacter ].
+"r to reset the timer on the ticking event, unless this is a team event referee request (<r or >r)"
+self characterAdded = $r & (self isTeamEvent not) ifTrue: [ self resetTimer; deleteLastCharacter ].
 
 "p to pause the timer so you can rewind the video"
 self characterAdded = $p ifTrue: [ self pauseTimer; deleteLastCharacter ].
