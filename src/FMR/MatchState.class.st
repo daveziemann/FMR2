@@ -267,10 +267,11 @@ pointScore := self score currentGameScore pointScore.
 
 { #category : #'actions - updating' }
 MatchState >> deleteLatestMatchplayEvent [
-| gone |
 
-gone := self matchplayEvents removeLast.
-FMRGrowlMorph growlDebugFor: 'Matchplay Events' message: [ 'Removed last: ',gone printString ]
+self matchplayEvents removeLast in: [ :gone |
+	FMRGrowlMorph
+		growlDebugFor: 'Matchplay Events'
+		message: [ 'Removed last: ',gone printString ]]
 ]
 
 { #category : #configuration }

@@ -274,6 +274,16 @@ UIManager default defer: [
 	self setCursorToEnd ]
 ]
 
+{ #category : #'processing - real time' }
+SpPresenterFMRMain >> deleteLatestMatchplayEvent [
+"When deleting an event, reset the matchplay timer.
+	- although this does slightly distort the cumulative timing, it means that the next event entered will have the correct duration"
+
+self matchState deleteLatestMatchplayEvent.
+self resetTimer.
+
+]
+
 { #category : #'menu actions - history pane editing' }
 SpPresenterFMRMain >> editHistoryPane [
 "Open the history pane for editing using the file MS duration format"
@@ -1156,7 +1166,7 @@ self setCursorToEnd.
 
 ]
 
-{ #category : #processing }
+{ #category : #'processing - real time' }
 SpPresenterFMRMain >> processCharacterDeleted: deletedCharacter [
 
 "If we get here we think we need to delete the last matchplay event - sanity check this"
@@ -1166,7 +1176,7 @@ SpPresenterFMRMain >> processCharacterDeleted: deletedCharacter [
 		self matchState latestMatchplayEvent
 			ifNil: [ self error: 'Wants to delete an event we don''t have' ]
 			ifNotNil: [ :lme | lme representation = deletedCharacter
-				ifTrue: [ self matchState deleteLatestMatchplayEvent ]
+				ifTrue: [ self deleteLatestMatchplayEvent ]
 				ifFalse: [ self error: 'Wants to delete an event that doesn''t match the deleted character' ]]].
 self latestEventFeedback
 		
