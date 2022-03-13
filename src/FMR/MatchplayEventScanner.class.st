@@ -108,6 +108,20 @@ nextSequence := self selectForConfiguration.
 	interimSequence ]
 ]
 
+{ #category : #scanning }
+MatchplayEventScanner >> generateSequenceEventsScalar [
+| nextSequence |
+
+"Filter the matchplay events in the initial sequence to the transition event for the configured game and team"
+nextSequence := self selectForConfiguration.
+
+^self sequenceCollection collect: [ :eachEventSpec |
+	| interimSequence |
+	interimSequence := nextSequence collect: [ :eachMatchplayEvent | (self matchplayEvent: eachMatchplayEvent matches: eachEventSpec) ifTrue: [ eachMatchplayEvent ]].
+	nextSequence := interimSequence collect: [ :eachMatchplayEvent | eachMatchplayEvent ifNotNil: [ eachMatchplayEvent nextMatchplayEvent ]].
+	interimSequence ]
+]
+
 { #category : #initialization }
 MatchplayEventScanner >> initialize [ 
 
@@ -289,9 +303,21 @@ self error: 'oops'
 
 ]
 
+{ #category : #'calculations - generic' }
+MatchplayEventScanner >> scalarSequence [
+
+^(self sequenceEvents first with: self sequenceEvents last collect: [ :first :last | first -> last ])
+	select: [ :e | e key notNil ]
+]
+
 { #category : #scanning }
 MatchplayEventScanner >> scan [
 self sequenceEvents: self generateSequenceEvents
+]
+
+{ #category : #scanning }
+MatchplayEventScanner >> scanScalar [
+self sequenceEvents: self generateSequenceEventsScalar
 ]
 
 { #category : #scanning }
