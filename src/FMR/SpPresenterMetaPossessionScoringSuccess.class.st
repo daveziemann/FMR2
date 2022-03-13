@@ -14,9 +14,12 @@ chart := RSChart new.
 lp1 := RSLinePlot new x: (1 to: plot size) y: plot; color: Color red.
 
 popup := RSPopupDecoration new.
-popup chartPopupBuilder for: lp1 text: 'Conversion rate at this time' color: #red.
+chart addDecoration: popup.
+popup chartPopupBuilder: (RSBlockChartPopupBuilder new
+	rowShapeBlock: [ :thePlot :point |
+		RSLabel new text: point y asString,'% success after ',point x asString,'ms'; bold ]).
 
-chart addPlot: lp1; addDecoration: popup.
+chart addPlot: lp1.
 chart minValueY: self minValue; maxValueY: self maxValue.
 
 vertical := RSVerticalTick new

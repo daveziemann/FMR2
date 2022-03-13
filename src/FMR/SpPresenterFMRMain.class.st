@@ -903,7 +903,7 @@ menuBar := self newMenuBar
 				item
 					name: 'Meta Statistics';
 					icon: (self iconNamed: #database);
-					subMenu: self subMenuAnalyseDatabase ]
+					subMenu: self subMenuMetaStatistics ]
 				];
 	addGroup: [ :group | 
 		group
@@ -1598,40 +1598,6 @@ FMRGrowlMorph growlProgressFor: 'Information' message: aText asString
 ]
 
 { #category : #menu }
-SpPresenterFMRMain >> subMenuAnalyseDatabase [
-	^ self newMenu
-		addItem: [ :item | 
-			item
-				name: 'Generate and Open GOAT Awards';
-				icon: (self iconNamed: #database);
-				action: [ self generateAndOpenAwards ] ];
-		addItem: [ :item | 
-			item
-				name: 'View all Goal Ladders';
-				icon: (self iconNamed: #database);
-				action: [ self viewAllGoatLadders ] ];
-		addItem: [ :item | 
-			item
-				name: 'View all Possession Time Fractions';
-				icon: (self iconNamed: #database);
-				action: [ self viewAllPossessionTimeFractions ] ];
-		addItem: [ :item | 
-			item
-				name: 'View all Transition Charts';
-				icon: (self iconNamed: #database);
-				action: [ self viewAllTransitionCharts ] ];
-		addItem: [ :item | 
-			item
-				name: 'Top Win-correlating Statistics';
-				icon: (self iconNamed: #database);
-				action: [ self generateAndOpenWinCorrelates ] ];
-		yourself
-		
-
-
-]
-
-{ #category : #menu }
 SpPresenterFMRMain >> subMenuDebug [
 	^ self newMenu
 		addItem: [ :item | 
@@ -1754,6 +1720,50 @@ SpPresenterFMRMain >> subMenuHistory [
 				icon: (self iconNamed: #glamorousRefresh);
 				action: [ self updateRecording ] ];
 		yourself
+]
+
+{ #category : #menu }
+SpPresenterFMRMain >> subMenuMetaStatistics [
+	^ self newMenu
+		addItem: [ :item | 
+			item
+				name: 'Generate and Open GOAT Awards';
+				icon: (self iconNamed: #database);
+				action: [ self generateAndOpenAwards ] ];
+		addItem: [ :item | 
+			item
+				name: 'View all Goal Ladders';
+				icon: (self iconNamed: #database);
+				action: [ self viewAllGoatLadders ] ];
+		addItem: [ :item | 
+			item
+				name: 'View all Possession Time Fractions';
+				icon: (self iconNamed: #database);
+				action: [ self viewAllPossessionTimeFractions ] ];
+		addItem: [ :item | 
+			item
+				name: 'View all Transition Charts';
+				icon: (self iconNamed: #database);
+				action: [ self viewAllTransitionCharts ] ];
+		addItem: [ :item | 
+			item
+				name: 'Win/Lose Correlates';
+				icon: (self iconNamed: #database);
+				action: [ self generateAndOpenWinCorrelates ] ];
+		addItem: [ :item | 
+			item
+				name: '5-rod Passing Success by Possession Time Chart';
+				icon: (self iconNamed: #database);
+				action: [ self viewPassingSuccessByPossessionTime ] ];
+		addItem: [ :item | 
+			item
+				name: '3-rod Scoring Success by Possession Time Chart';
+				icon: (self iconNamed: #database);
+				action: [ self viewScoringSuccessByPossessionTime ] ];
+		yourself
+		
+
+
 ]
 
 { #category : #menu }
@@ -1961,6 +1971,22 @@ SpPresenterFMRMain >> viewAllPossessionTimeFractions [
 SpPresenterFMRMain >> viewAllTransitionCharts [
 (SpMatchStateTabPresenter basicNew modelClass: SpPresenterPseudoRodTransitionChart) initialize openWithSpec
 	title: 'Transition Charts';
+	extent: 1800@900.
+]
+
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> viewPassingSuccessByPossessionTime [
+
+SpPresenterMetaPossessionPassingSuccess new openWithSpec
+	title: '5-Rod Passing Success Rate as a Function of Posssession Time';
+	extent: 1800@900.
+]
+
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> viewScoringSuccessByPossessionTime [
+
+SpPresenterMetaPossessionScoringSuccess new openWithSpec
+	title: '3-Rod Conversion Success Rate as a Function of Posssession Time';
 	extent: 1800@900.
 ]
 
