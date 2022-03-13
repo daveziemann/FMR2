@@ -1,5 +1,5 @@
 Class {
-	#name : #SpPresenterPossessionScoringCorrelation,
+	#name : #SpPresenterPossessionPassingCorrelation,
 	#superclass : #'SpPresenterFMR_',
 	#instVars : [
 		'success'
@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #drawing }
-SpPresenterPossessionScoringCorrelation >> createChart [
+SpPresenterPossessionPassingCorrelation >> createChart [
 | minValue maxValue chart lp1 popup data plot vertical horizontal goals possessions t |
 
 minValue := 30.
-maxValue := 45.
+maxValue := 50.
 
 self success: self trawlForSuccess.
 data := Array new: self success last key withAll: #(0 0).
@@ -24,7 +24,7 @@ chart := RSChart new.
 lp1 := RSLinePlot new x: (1 to: plot size) y: plot; color: Color red.
 
 popup := RSPopupDecoration new.
-popup chartPopupBuilder for: lp1 text: 'Conversion rate at this time' color: #red.
+popup chartPopupBuilder for: lp1 text: 'Passing rate at this time' color: #red.
 
 chart addPlot: lp1; addDecoration: popup.
 chart minValueY: minValue; maxValueY: maxValue.
@@ -47,10 +47,10 @@ chart addDecoration: horizontal.
 
 goals := (self success collect:[ :e |e value]) sum.
 possessions := self success size.
-t := goals asString,' goals from ',possessions asString,' controlled possessions (',(100.0*goals/possessions) rounded asString,'%)'.
+t := goals asString,' passes from ',possessions asString,' 5-rod possessions (',(100.0*goals/possessions) rounded asString,'%)'.
 chart addDecoration: (RSChartTitleDecoration new fontSize: 10; title: t).
-chart addDecoration: (RSYLabelDecoration new title: '3-rod conversion rate'; fontSize: 10).
-chart addDecoration: (RSXLabelDecoration new title: '3-rod possession time'; fontSize: 10).
+chart addDecoration: (RSYLabelDecoration new title: '5-rod passing rate'; fontSize: 10).
+chart addDecoration: (RSXLabelDecoration new title: '5-rod possession time'; fontSize: 10).
 
 chart build.
 
@@ -58,7 +58,7 @@ chart build.
 ]
 
 { #category : #drawing }
-SpPresenterPossessionScoringCorrelation >> drawOnCanvas: aCanvas charts: charts [
+SpPresenterPossessionPassingCorrelation >> drawOnCanvas: aCanvas charts: charts [
 "Render the four charts on aCanvas"
 | compositeShapes |
 
@@ -74,7 +74,7 @@ aCanvas @ RSCanvasController
 ]
 
 { #category : #initialization }
-SpPresenterPossessionScoringCorrelation >> initializePresenters [
+SpPresenterPossessionPassingCorrelation >> initializePresenters [
 | charts rp |
 
 charts := OrderedCollection new
@@ -91,7 +91,7 @@ self layout: (SpBoxLayout newLeftToRight hAlignStart
 ]
 
 { #category : #drawing }
-SpPresenterPossessionScoringCorrelation >> possessionTimeAndSuccess: aMatchState [
+SpPresenterPossessionPassingCorrelation >> possessionTimeAndSuccess: aMatchState [
 "Answer a collection of associations
 	- each key a possession time
 	- each value a flag indicating whether the transition was a success or a fail"
@@ -99,7 +99,7 @@ SpPresenterPossessionScoringCorrelation >> possessionTimeAndSuccess: aMatchState
 | sg ps r c d |
 
 sg := aMatchState statisticsGenerator generate.
-ps := sg at: PSScoringFrom3Rod.
+ps := sg at: PSPassingSuccess5To3.
 c := ps sequences collect: [ :eachSequence |
 	r := (ps scanner sequence: eachSequence) scanScalar scalarSequence.
 	r collect: [ :e | e key durationOrZero -> e value notNil asBit ]].
@@ -109,19 +109,19 @@ d := (c collect: [ :ec | ec collect: [ :e | e value ]]) sum.
 ]
 
 { #category : #accessing }
-SpPresenterPossessionScoringCorrelation >> success [
+SpPresenterPossessionPassingCorrelation >> success [
 
 	^ success
 ]
 
 { #category : #accessing }
-SpPresenterPossessionScoringCorrelation >> success: anObject [
+SpPresenterPossessionPassingCorrelation >> success: anObject [
 
 	success := anObject
 ]
 
 { #category : #drawing }
-SpPresenterPossessionScoringCorrelation >> trawlForSuccess [
+SpPresenterPossessionPassingCorrelation >> trawlForSuccess [
 | possessionTimeAndSuccess |
 
 possessionTimeAndSuccess := SortedCollection new.
