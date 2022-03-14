@@ -2,7 +2,7 @@ Class {
 	#name : #SpPresenterMetaPossessionTimeSuccess,
 	#superclass : #'SpPresenterFMR_',
 	#instVars : [
-		'success'
+		'possessionTimesAndSuccess'
 	],
 	#category : #FMR
 }
@@ -10,6 +10,17 @@ Class {
 { #category : #drawing }
 SpPresenterMetaPossessionTimeSuccess >> createChart [
 ^self subclassResponsibility  
+]
+
+{ #category : #drawing }
+SpPresenterMetaPossessionTimeSuccess >> dataToPlot [
+| data |
+
+data := Array new: self possessionTimesAndSuccess last key withAll: #(0 0).
+self possessionTimesAndSuccess do: [ :e | data at: e key put: (data at: e key) + {1.e value} ].
+data doWithIndex: [ :e :i |	i=1 ifFalse: [ data at: i put: (data at: i)+(data at: i-1) ]].
+^data collect: [ :e | ((100.0 * (e second divideBy: e first)) round: 1) max: self minValue ]
+
 ]
 
 { #category : #drawing }
@@ -28,16 +39,32 @@ aCanvas when: RSMouseClick do: [ :event |  ].
 aCanvas @ RSCanvasController
 ]
 
+{ #category : #drawing }
+SpPresenterMetaPossessionTimeSuccess >> drawOnCanvas: aCanvas shapes: shapes [
+"Render the four charts on aCanvas"
+
+aCanvas addAll: shapes.
+
+"Layout 2x2"
+RSGridLayout new lineItemsCount: 2; gapSize: 10; on: shapes.
+
+aCanvas when: RSMouseClick do: [ :event |  ].
+aCanvas @ RSCanvasController
+]
+
 { #category : #initialization }
 SpPresenterMetaPossessionTimeSuccess >> initializePresenters [
-| charts rp |
+| shapes rp |
 
-charts := OrderedCollection new
-	add: self createChart;
+self trawl.
+
+shapes := OrderedCollection new
+	add: self possessionTimeDistributionShape;
+	add: self createChart container asShape;
 	yourself.
 
 rp := self instantiate: SpRoassalPresenter.
-rp script: [ :canvas | self drawOnCanvas: canvas charts: charts ].
+rp script: [ :canvas | self drawOnCanvas: canvas shapes: shapes ].
 
 self layout: (SpBoxLayout newLeftToRight hAlignStart
 	add: rp withConstraints: [ :c | c width: 1800 ];
@@ -74,35 +101,64 @@ d := (c collect: [ :ec | ec collect: [ :e | e value ]]) sum.
 ]
 
 { #category : #drawing }
+SpPresenterMetaPossessionTimeSuccess >> possessionTimeDistributionShape [
+| possessionTimes numberOfBuckets group chart plot |
+
+possessionTimes := self possessionTimes.
+numberOfBuckets := (possessionTimes max/500) ceiling.
+group := RSGroup new.
+chart := RSChart new.
+chart container: group.
+plot := RSHistogramPlot new
+	x: possessionTimes;
+	bins: numberOfBuckets.
+chart addPlot: plot.
+chart addDecoration: (RSVerticalTick new
+	labelConversion: [ :value | value asInteger asString ];
+	yourself).
+chart addDecoration: (RSHorizontalTick new
+	numberOfTicks: numberOfBuckets/2;
+	labelConversion: [ :value | (value/1000) rounded asDuration humanAbbreviatedReadablePrintString ]
+	yourself).		
+chart title: self printRod,' possession time distribution'. 
+chart addDecoration: (RSYLabelDecoration new title: 'Number of possessions').
+chart build.
+^group asShapeFor: numberOfBuckets.
+
+]
+
+{ #category : #drawing }
+SpPresenterMetaPossessionTimeSuccess >> possessionTimes [
+^self possessionTimesAndSuccess collect: [ :e | e key ]
+]
+
+{ #category : #accessing }
+SpPresenterMetaPossessionTimeSuccess >> possessionTimesAndSuccess [
+
+	^ possessionTimesAndSuccess
+]
+
+{ #category : #accessing }
+SpPresenterMetaPossessionTimeSuccess >> possessionTimesAndSuccess: anObject [
+
+	possessionTimesAndSuccess := anObject
+]
+
+{ #category : #drawing }
+SpPresenterMetaPossessionTimeSuccess >> printRod [ 
+^self statisticClass new rods first asString,'-rod'
+]
+
+{ #category : #drawing }
 SpPresenterMetaPossessionTimeSuccess >> statisticClass [
 ^self subclassResponsibility  
 ]
 
-{ #category : #accessing }
-SpPresenterMetaPossessionTimeSuccess >> success [
-
-	^ success
-]
-
-{ #category : #accessing }
-SpPresenterMetaPossessionTimeSuccess >> success: anObject [
-
-	success := anObject
-]
-
 { #category : #drawing }
 SpPresenterMetaPossessionTimeSuccess >> trawl [
-"Trawl the meta data and answer data for plotting"
+"Trawl and capture the meta data"
 
-| data |
-
-self success: self trawlForSuccess.
-
-data := Array new: self success last key withAll: #(0 0).
-self success do: [ :e | data at: e key put: (data at: e key) + {1.e value} ].
-data doWithIndex: [ :e :i |	i=1 ifFalse: [ data at: i put: (data at: i)+(data at: i-1) ]].
-^data collect: [ :e | ((100.0 * (e second divideBy: e first)) round: 1) max: self minValue ].
-
+self possessionTimesAndSuccess: self trawlForSuccess
 ]
 
 { #category : #drawing }

@@ -8,7 +8,7 @@ Class {
 SpPresenterMetaPossessionPassingSuccess >> createChart [
 | chart lp1 popup plot vertical horizontal successes possessions t |
 
-plot := self trawl.
+plot := self dataToPlot.
 
 chart := RSChart new.
 lp1 := RSLinePlot new x: (1 to: plot size) y: plot; color: Color red.
@@ -38,8 +38,8 @@ horizontal shape width: 1.
 horizontal configuration tickSize: chart extent y negated.	
 chart addDecoration: horizontal.
 
-successes := (self success collect:[ :e |e value]) sum.
-possessions := self success size.
+successes := (self possessionTimesAndSuccess collect:[ :e |e value]) sum.
+possessions := self possessionTimesAndSuccess size.
 t := '5-rod passing success by time of possession (',successes asString,' passes from ',possessions asString,' possessions = ',(100.0*successes/possessions) rounded asString,'%)'.
 
 chart addDecoration: (RSChartTitleDecoration new fontSize: 8; title: t).
