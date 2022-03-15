@@ -5,63 +5,36 @@ Class {
 }
 
 { #category : #drawing }
-SpPresenterMetaPossessionScoringSuccess >> createChart [
-| chart lp1 popup plot vertical horizontal successes possessions t |
+SpPresenterMetaPossessionScoringSuccess >> createChartShape [
+| chart lb |
 
-plot := self dataToPlot.
-
-chart := RSChart new.
-lp1 := RSLinePlot new x: (1 to: plot size) y: plot; color: Color red.
-
-popup := RSPopupDecoration new.
-chart addDecoration: popup.
-popup chartPopupBuilder: (RSBlockChartPopupBuilder new
-	rowShapeBlock: [ :thePlot :point |
-		RSLabel new text: point y asString,'% success after ',point x asString,'ms'; bold ]).
-
-chart addPlot: lp1.
-chart minValueY: self minValue; maxValueY: self maxValue.
-
-vertical := RSVerticalTick new
-	numberOfTicks: 10;
-	labelConversion: [ :value | value asString,'%' ]
-	yourself.
-vertical shape dashed width: 1.
-vertical configuration tickSize: chart extent x negated.
-chart addDecoration: vertical.
-
-horizontal := RSHorizontalTick new
-	numberOfTicks: 18;
-	labelConversion: [ :value | (value / 1000) rounded asDuration humanAbbreviatedReadablePrintString ]
-	yourself.
-horizontal shape width: 1.
-horizontal configuration tickSize: chart extent y negated.	
-chart addDecoration: horizontal.
-
-successes := (self possessionTimesAndSuccess collect:[ :e |e value]) sum.
-possessions := self possessionTimesAndSuccess size.
-t := '3-rod conversion rate by possession time (',successes asString,' goals from ',possessions asString,' controlled possessions = ',(100.0*successes/possessions) rounded asString,'%)'.
-
-chart addDecoration: (RSChartTitleDecoration new fontSize: 8; title: t).
-chart addDecoration: (RSYLabelDecoration new title: '3-rod conversion rate'; fontSize: 10).
-chart addDecoration: (RSXLabelDecoration new title: '3-rod possession time'; fontSize: 10).
-
+chart := self createChart.
+chart title: '3-rod conversion rate'.
+chart addDecoration: (RSYLabelDecoration new title: '3-rod conversion rate').
+chart addDecoration: (RSXLabelDecoration new title: '3-rod possession time').
 chart build.
 
-^chart
+lb := RSLegend new.
+lb container: chart canvas.
+lb text: self successes asString,' goals from ',self possessions asString,' controlled possessions = ',(100.0 * self successes / self possessions) rounded asString,'%'.
+lb legendDo: [ :l | l withBorder; padding: 2 ].
+lb location below offset: 0@8.
+lb build.
+
+^chart canvas asShape
 ]
 
-{ #category : #drawing }
+{ #category : #access }
 SpPresenterMetaPossessionScoringSuccess >> maxValue [
 ^50
 ]
 
-{ #category : #drawing }
+{ #category : #access }
 SpPresenterMetaPossessionScoringSuccess >> minValue [
 ^30
 ]
 
-{ #category : #drawing }
+{ #category : #access }
 SpPresenterMetaPossessionScoringSuccess >> statisticClass [
 ^PSScoringFrom3Rod
 ]
