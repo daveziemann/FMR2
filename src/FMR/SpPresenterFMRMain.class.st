@@ -1759,7 +1759,12 @@ SpPresenterFMRMain >> subMenuMetaStatistics [
 			item
 				name: '3-rod Scoring Success by Possession Time Chart';
 				icon: (self iconNamed: #database);
-				action: [ self viewScoringSuccessByPossessionTime ] ];
+				action: [ self viewScoring3SuccessByPossessionTime ] ];
+		addItem: [ :item | 
+			item
+				name: '2-rod Scoring Success by Possession Time Chart';
+				icon: (self iconNamed: #database);
+				action: [ self viewScoring2SuccessByPossessionTime ] ];
 		yourself
 		
 
@@ -1977,15 +1982,31 @@ SpPresenterFMRMain >> viewAllTransitionCharts [
 { #category : #'menu actions' }
 SpPresenterFMRMain >> viewPassingSuccessByPossessionTime [
 
-SpPresenterMetaPossessionPassingSuccess new openWithSpec
+SpPresenterMetaPossessionPassing53Success new openWithSpec
 	title: '5-Rod Passing Success Rate as a Function of Posssession Time';
+	extent: 1800@900.
+]
+
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> viewScoring2SuccessByPossessionTime [
+
+SpPresenterMetaPossessionScoring2Success new openWithSpec
+	title: '2-Rod Scoring Success Rate as a Function of Posssession Time';
+	extent: 1800@900.
+]
+
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> viewScoring3SuccessByPossessionTime [
+
+SpPresenterMetaPossessionScoring3Success new openWithSpec
+	title: '3-Rod Conversion Success Rate as a Function of Posssession Time';
 	extent: 1800@900.
 ]
 
 { #category : #'menu actions' }
 SpPresenterFMRMain >> viewScoringSuccessByPossessionTime [
 
-SpPresenterMetaPossessionScoringSuccess new openWithSpec
+SpPresenterMetaPossessionScoring3Success new openWithSpec
 	title: '3-Rod Conversion Success Rate as a Function of Posssession Time';
 	extent: 1800@900.
 ]

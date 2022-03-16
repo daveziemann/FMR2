@@ -142,13 +142,13 @@ chart addDecoration: (RSHorizontalTick new
 	labelConversion: [ :value | (value/1000) rounded asDuration humanAbbreviatedReadablePrintString ]
 	yourself).		
 chart title: self printRod,' possession time'. 
-chart addDecoration: (RSYLabelDecoration new title: 'Number of possessions').
+chart addDecoration: (RSYLabelDecoration new title: 'Number of controlled possessions').
 chart addDecoration: (RSXLabelDecoration new title: self printRod,' possession time').
 chart build.
 
 lb := RSLegend new.
 lb container: canvas.
-lb text: 'Total ',self printRod,' possessions = ',possessionTimes size asString.
+lb text: 'Total ',self printRod,' controlled possessions = ',possessionTimes size asString.
 lb legendDo: [ :l | l withBorder; padding: 2 ].
 lb location below offset: 0@8.
 lb build.
