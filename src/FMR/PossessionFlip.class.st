@@ -40,3 +40,8 @@ PossessionFlip >> printDurationToS [
 	ifTrue: [ super printDurationToS ]
 	ifFalse: [ '' ]
 ]
+
+{ #category : #access }
+PossessionFlip >> reasonableMaximumDuration [
+^4 seconds
+]

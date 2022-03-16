@@ -109,6 +109,7 @@ matchplayEvents do: [ :eachMatchplayEvent |
 			self << eachMatchplayEvent eventIndexText.
 			self printMatchplayEvent: eachMatchplayEvent.
 			self tab; tab; tab; << eachMatchplayEvent printCurrentScore.
+			self tab; tab; << eachMatchplayEvent explainEvent.
 			self tab; tab; << eachMatchplayEvent printFlagIndicator.
 			self cr ]
 	ifFalse: [ 

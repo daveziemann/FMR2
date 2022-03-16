@@ -150,6 +150,7 @@ MatchState class >> tableTypesAndColours [
 ^OrderedCollection new
 	add: #('Unknown' #blue #red);
 	add: #('Bonzini' #blue #red);
+	add: #('Fireball' #black #red);
 	add: #('Garlando' #blue #red);
 	add: #('Leonhart' #black #green);
 	add: #('Roberto' #blue #red);
@@ -588,6 +589,18 @@ MatchState >> pointTarget [
 	detect: [ :eachMatchplayEvent | eachMatchplayEvent isEndGame ]
 	ifFound: [ :firstEndGame | firstEndGame score lastCompletedGameScore maximum ]
 	ifNone: []
+]
+
+{ #category : #access }
+MatchState >> positionSwapParityAtEvent: aMatchplayEvent [
+| parityFlip |
+
+parityFlip := false.
+self matchplayEvents do: [ :eachMatchplayEvent |
+	eachMatchplayEvent isPositionSwap ifTrue: [ parityFlip := parityFlip not ].
+	eachMatchplayEvent == aMatchplayEvent ifTrue: [ ^parityFlip ]].
+^parityFlip
+
 ]
 
 { #category : #access }

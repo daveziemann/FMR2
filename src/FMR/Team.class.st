@@ -22,6 +22,22 @@ Team class >> newFromString: aString [
 	yourself
 ]
 
+{ #category : #access }
+Team >> backPlayer [
+"Answer the name of the back player at the start of the match
+	- make it work for singles too"
+
+^(self teamName tokensBasedOn: '&') last trim
+]
+
+{ #category : #access }
+Team >> forwardPlayer [
+"Answer the name of the back player at the start of the match
+	- make it work for singles too"
+
+^(self teamName tokensBasedOn: '&') first trim
+]
+
 { #category : #testing }
 Team >> isDoubles [
 ^self teamName includes: $&

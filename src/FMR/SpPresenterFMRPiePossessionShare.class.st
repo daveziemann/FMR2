@@ -83,7 +83,7 @@ pie sliceColor: [ :slice | slice model getColour ]; build.
 
 "Thick border around winning team segment"
 (pie shapes at: (self matchState teamThatWonGame: twoStatistics first gameNumber))
-	border: (RSBorder new width: 4; color: FMRColour neutralColour).
+	border: (RSBorder new width: 6; color: FMRColour neutralColour).
 
 pie shapes @ pieLabel.
 self animationOutin: pie.

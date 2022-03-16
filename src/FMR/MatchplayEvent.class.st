@@ -286,6 +286,14 @@ teamWithPossession_ := gameNumber_ := eventIndex_ := score_ := nil
 ]
 
 { #category : #access }
+MatchplayEvent >> forwardPlayer [
+
+^(self matchState positionSwapParityAtEvent: self)
+	ifTrue: [ self teamWithOwnership backPlayer ]
+	ifFalse: [ self teamWithOwnership forwardPlayer ]
+]
+
+{ #category : #access }
 MatchplayEvent >> gameNumber [ 
 "Answer the number of the game that the receiver is in, or 0 if the event is not in any game, e.g. a command"
 
@@ -406,6 +414,11 @@ MatchplayEvent >> isMatchplayComment [
 MatchplayEvent >> isMatchplayEvent [
 "Instances of some subclasses aren't actually events in the match but meta-events"
 ^true
+]
+
+{ #category : #testing }
+MatchplayEvent >> isPositionSwap [
+^false
 ]
 
 { #category : #testing }
