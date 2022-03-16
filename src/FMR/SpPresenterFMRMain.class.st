@@ -1752,17 +1752,17 @@ SpPresenterFMRMain >> subMenuMetaStatistics [
 				action: [ self generateAndOpenWinCorrelates ] ];
 		addItem: [ :item | 
 			item
-				name: '5-rod Passing Success by Possession Time Chart';
+				name: '5-rod Possession Time Distribution and Passing Success';
 				icon: (self iconNamed: #database);
 				action: [ self viewPassingSuccessByPossessionTime ] ];
 		addItem: [ :item | 
 			item
-				name: '3-rod Scoring Success by Possession Time Chart';
+				name: '3-rod Possession Time Distribution and Scoring Success';
 				icon: (self iconNamed: #database);
 				action: [ self viewScoring3SuccessByPossessionTime ] ];
 		addItem: [ :item | 
 			item
-				name: '2-rod Scoring Success by Possession Time Chart';
+				name: '2-rod Possession Time Distribution and Scoring Success';
 				icon: (self iconNamed: #database);
 				action: [ self viewScoring2SuccessByPossessionTime ] ];
 		yourself
