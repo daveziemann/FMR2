@@ -382,7 +382,7 @@ awardsPresenter := SpStatisticsPagePresenter basicNew
 window := awardsPresenter openWithSpec.
 window title: 'FMR Awards - The Best Ever!'.
 window extent: 1800@500.
-
+^awardsPresenter
 
 ]
 
@@ -1754,7 +1754,7 @@ SpPresenterFMRMain >> subMenuMetaStatistics [
 			item
 				name: '5-rod Possession Time Distribution and Passing Success';
 				icon: (self iconNamed: #database);
-				action: [ self viewPassingSuccessByPossessionTime ] ];
+				action: [ self viewPassing53SuccessByPossessionTime ] ];
 		addItem: [ :item | 
 			item
 				name: '3-rod Possession Time Distribution and Scoring Success';
@@ -1765,6 +1765,14 @@ SpPresenterFMRMain >> subMenuMetaStatistics [
 				name: '2-rod Possession Time Distribution and Scoring Success';
 				icon: (self iconNamed: #database);
 				action: [ self viewScoring2SuccessByPossessionTime ] ];
+		addItem: [ :item | 
+			item
+				name: 'Meta Stats Tabs';
+				icon: (self iconNamed: #database);
+				action: [ SpMetaStatisticsPresenter basicNew 
+					mainPresenter: self;
+					initialize;
+					openWithSpec ]];
 		yourself
 		
 
@@ -1980,10 +1988,10 @@ SpPresenterFMRMain >> viewAllTransitionCharts [
 ]
 
 { #category : #'menu actions' }
-SpPresenterFMRMain >> viewPassingSuccessByPossessionTime [
+SpPresenterFMRMain >> viewPassing53SuccessByPossessionTime [
 
 SpPresenterMetaPossessionPassing53Success new openWithSpec
-	title: '5-Rod Passing Success Rate as a Function of Posssession Time';
+	title: '5-Rod Possession Time and Passing Success Rate';
 	extent: 1800@900.
 ]
 
@@ -1991,7 +1999,7 @@ SpPresenterMetaPossessionPassing53Success new openWithSpec
 SpPresenterFMRMain >> viewScoring2SuccessByPossessionTime [
 
 SpPresenterMetaPossessionScoring2Success new openWithSpec
-	title: '2-Rod Scoring Success Rate as a Function of Posssession Time';
+	title: '2-Rod Posssession Time and Scoring Success Rate';
 	extent: 1800@900.
 ]
 
@@ -1999,15 +2007,7 @@ SpPresenterMetaPossessionScoring2Success new openWithSpec
 SpPresenterFMRMain >> viewScoring3SuccessByPossessionTime [
 
 SpPresenterMetaPossessionScoring3Success new openWithSpec
-	title: '3-Rod Conversion Success Rate as a Function of Posssession Time';
-	extent: 1800@900.
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewScoringSuccessByPossessionTime [
-
-SpPresenterMetaPossessionScoring3Success new openWithSpec
-	title: '3-Rod Conversion Success Rate as a Function of Posssession Time';
+	title: '3-Rod Posssession Time and Scoring Success Rate';
 	extent: 1800@900.
 ]
 
