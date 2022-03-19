@@ -31,11 +31,7 @@ self noteBook
 	addPageTitle: 'Possession Time Limit Fraction'
 	provider: [ self newPresenter: SpPresenterPossessionFraction ];
 	
-	addPageTitle: 'PTFL (Multi)'
-	provider: [ self newPresenter: SpPresenterPossessionFractionMulti ];
-	
-	addPageTitle: 'Possession Share Pie (Multi)'
-	provider: [ self newPresenter: SpPresenterFMRPiePossessionShareMulti ].
+	yourself.
 	
 self layout: (SpBoxLayout newTopToBottom
 	add: self mainMenu expand: false;

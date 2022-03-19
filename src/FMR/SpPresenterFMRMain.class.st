@@ -276,11 +276,20 @@ UIManager default defer: [
 
 { #category : #'processing - real time' }
 SpPresenterFMRMain >> deleteLatestMatchplayEvent [
-"When deleting an event, reset the matchplay timer.
-	- although this does slightly distort the cumulative timing, it means that the next event entered will have the correct duration"
+"Delete the latest matchplay event, the assumption is that it was erronesouly entered"
 
 self matchState deleteLatestMatchplayEvent.
-self resetTimer.
+
+"There is a question about whether to reset the matchplay timer when deleting the last event:
+	- if we reset the timer then:
+		- the next event entered will have the correct duration
+		- the cumulative time will be slightly distorted
+		- the user can always use the r key to explicitly reset the timer
+	- if we do not reset the timer then:
+		- the next event will have a duration that's slightly too long"
+
+"On blance, do not reset the timer; let the user do it with the r key"
+"self resetTimer."
 
 ]
 
@@ -874,6 +883,14 @@ menuBar := self newMenuBar
 					name: 'Help';
 					icon: (self iconNamed: #help);
 					subMenu: self subMenuHelp ]
+				];
+	addGroup: [ :group | 
+		group
+			addItem: [ :item | 
+				item
+					name: 'Lab';
+					icon: (self iconNamed: #testRunner);
+					subMenu: self subMenuLab ]
 				];
 	addGroup: [ :group | 
 		group
@@ -1688,6 +1705,24 @@ SpPresenterFMRMain >> subMenuHistory [
 				icon: (self iconNamed: #glamorousRefresh);
 				action: [ self updateRecording ] ];
 		yourself
+]
+
+{ #category : #menu }
+SpPresenterFMRMain >> subMenuLab [
+	^self newMenu
+		addGroup: [ :aGroup |
+			aGroup 
+				addItem: [ :item |
+					item
+						name: 'Possession Time Limit Fraction (Multi)';
+						icon: (self iconNamed: #testRunner);
+						action: [(SpPresenterPossessionFractionMulti basicNew matchState: self matchState) initialize; openWithSpec]];
+				addItem: [ :item |
+					item
+						name: 'Possession Share Pie (Multi)';
+						icon: (self iconNamed: #testRunner);
+						action: [(SpPresenterFMRPiePossessionShareMulti basicNew matchState: self matchState) initialize; openWithSpec]];
+				yourself ]
 ]
 
 { #category : #menu }
