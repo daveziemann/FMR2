@@ -370,36 +370,6 @@ SpPresenterFMRMain >> gameScoreLabel: anObject [
 	gameScoreLabel := anObject
 ]
 
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> generateAndOpenAwards [
-| merger awardsPresenter window |
-
-merger := StatisticsMerger new merge.
-awardsPresenter := SpStatisticsPagePresenter basicNew 
-	statisticsGenerator: merger statisticsGenerator;
-	modelClass: PSMorphTreeModelAwards;
-	initialize.
-window := awardsPresenter openWithSpec.
-window title: 'FMR Awards - The Best Ever!'.
-window extent: 1800@500.
-^awardsPresenter
-
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> generateAndOpenWinCorrelates [
-| presenter window |
-
-presenter := SpStatisticsPagePresenter basicNew
-	statisticsGenerator:StatisticsGenerator new;
-	modelClass: PSMorphTreeModelTrawlWinCorrrelates;
-	initialize.
-window := presenter openWithSpec.
-window title: 'FMR - Top Win-correlating Statistics'.
-window extent: 1100@800.
-
-]
-
 { #category : #accessing }
 SpPresenterFMRMain >> headlinePresenter [
 
@@ -901,14 +871,6 @@ menuBar := self newMenuBar
 		group
 			addItem: [ :item | 
 				item
-					name: 'Meta Statistics';
-					icon: (self iconNamed: #database);
-					subMenu: self subMenuMetaStatistics ]
-				];
-	addGroup: [ :group | 
-		group
-			addItem: [ :item | 
-				item
 					name: 'Help';
 					icon: (self iconNamed: #help);
 					subMenu: self subMenuHelp ]
@@ -931,6 +893,12 @@ SpPresenterFMRMain >> menuEnableHistory [
 self enable: (self historyPaneEditState isNil) menuItemAtName: 'Edit Matchplay History'.
 self enable: (self historyPaneEditState = #editing) menuItemAtName: 'Cancel Matchplay History'.
 self enable: (self historyPaneEditState = #editing) menuItemAtName: 'Accept Matchplay History'.
+
+self
+	enable: (self matchState notNil and: [ self matchState hasGames ])
+	menuItemAtName: 'Match Statistics'.
+	
+
 ]
 
 { #category : #menu }
@@ -1723,64 +1691,6 @@ SpPresenterFMRMain >> subMenuHistory [
 ]
 
 { #category : #menu }
-SpPresenterFMRMain >> subMenuMetaStatistics [
-	^ self newMenu
-		addItem: [ :item | 
-			item
-				name: 'Generate and Open GOAT Awards';
-				icon: (self iconNamed: #database);
-				action: [ self generateAndOpenAwards ] ];
-		addItem: [ :item | 
-			item
-				name: 'View all Goal Ladders';
-				icon: (self iconNamed: #database);
-				action: [ self viewAllGoatLadders ] ];
-		addItem: [ :item | 
-			item
-				name: 'View all Possession Time Fractions';
-				icon: (self iconNamed: #database);
-				action: [ self viewAllPossessionTimeFractions ] ];
-		addItem: [ :item | 
-			item
-				name: 'View all Transition Charts';
-				icon: (self iconNamed: #database);
-				action: [ self viewAllTransitionCharts ] ];
-		addItem: [ :item | 
-			item
-				name: 'Win/Lose Correlates';
-				icon: (self iconNamed: #database);
-				action: [ self generateAndOpenWinCorrelates ] ];
-		addItem: [ :item | 
-			item
-				name: '5-rod Possession Time Distribution and Passing Success';
-				icon: (self iconNamed: #database);
-				action: [ self viewPassing53SuccessByPossessionTime ] ];
-		addItem: [ :item | 
-			item
-				name: '3-rod Possession Time Distribution and Scoring Success';
-				icon: (self iconNamed: #database);
-				action: [ self viewScoring3SuccessByPossessionTime ] ];
-		addItem: [ :item | 
-			item
-				name: '2-rod Possession Time Distribution and Scoring Success';
-				icon: (self iconNamed: #database);
-				action: [ self viewScoring2SuccessByPossessionTime ] ];
-		addItem: [ :item | 
-			item
-				name: 'Meta Stats Tabs';
-				icon: (self iconNamed: #database);
-				action: [ (SpMetaStatisticsPresenter basicNew 
-					mainPresenter: self;
-					initialize;
-					openWithSpec)
-						extent: 1800@1000 ]];
-		yourself
-		
-
-
-]
-
-{ #category : #menu }
 SpPresenterFMRMain >> subMenuRecording [
 	^ self newMenu
 		addItem: [ :item | 
@@ -1957,59 +1867,6 @@ self refreshHistoryPane.
 self menuEnableHistory.
 self updateUI
 
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewAllGoatLadders [
-| canvas gameDisplacementX gl |
-
-canvas := RSCanvas new.
-gameDisplacementX := 0.
-MatchStateEnumerator new allMatchesDo: [ :eachMatchState |
-	gl := FMRGoalLadder new matchState: eachMatchState.
-	gl gameDisplacementX: gameDisplacementX.
-	canvas := gl drawOnCanvas: canvas.
-	gameDisplacementX := gameDisplacementX + 12 ].
-
-canvas openWithTitle: 'Viewing Goal Ladders for All Recordings'
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewAllPossessionTimeFractions [
-(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPossessionFraction) initialize openWithSpec
-	title: 'Trawl Possession Time Limit Fraction';
-	extent: 1800@900.
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewAllTransitionCharts [
-(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPseudoRodTransitionChart) initialize openWithSpec
-	title: 'Transition Charts';
-	extent: 1800@900.
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewPassing53SuccessByPossessionTime [
-
-SpPresenterMetaPossessionPassing53Success new openWithSpec
-	title: '5-Rod Possession Time and Passing Success Rate';
-	extent: 1800@900.
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewScoring2SuccessByPossessionTime [
-
-SpPresenterMetaPossessionScoring2Success new openWithSpec
-	title: '2-Rod Posssession Time and Scoring Success Rate';
-	extent: 1800@900.
-]
-
-{ #category : #'menu actions' }
-SpPresenterFMRMain >> viewScoring3SuccessByPossessionTime [
-
-SpPresenterMetaPossessionScoring3Success new openWithSpec
-	title: '3-Rod Posssession Time and Scoring Success Rate';
-	extent: 1800@900.
 ]
 
 { #category : #'update UI' }

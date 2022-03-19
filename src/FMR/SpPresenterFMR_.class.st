@@ -68,9 +68,31 @@ SpPresenterFMR_ >> subMenuStatistics [
 	^ self newMenu
 		addItem: [ :item | 
 			item
-				name: 'Show';
+				name: 'Match Statistics';
 				icon: (self iconNamed: #transcript);
-				subMenu: self subMenuStatisticsShow ];
+				subMenu: (self newMenu
+					addItem: [ :i | i
+						name: 'Graphics';
+						icon: (self iconNamed: #paint);
+						action: [ self openStatisticsPictures ] ];
+					addItem: [ :i | i
+						name: 'Numbers';
+						icon: (self iconNamed: #glamorousTable);
+						action: [ self openStatisticsNumbers ] ];
+					addItem: [ :i | i
+						name: 'Game Headlines';
+						icon: (self iconNamed: #glamorousBrowse);
+						action: [ self showHeadlineStatisticsChart ] ];		
+					yourself) ];
+		addItem: [ :item | 
+			item
+				name: 'Meta Statistics';
+				icon: (self iconNamed: #database);
+				action: [
+					(SpMetaStatisticsPresenter basicNew 
+						mainPresenter: self;
+						initialize;
+						openWithSpec) extent: 1800@1000 ]];
 		addItem: [ :item | 
 			item
 				name: 'Statistics Settings';
@@ -80,22 +102,30 @@ SpPresenterFMR_ >> subMenuStatistics [
 ]
 
 { #category : #menu }
-SpPresenterFMR_ >> subMenuStatisticsShow [
+SpPresenterFMR_ >> subMenuStatistics1 [
 	^ self newMenu
 		addItem: [ :item | 
 			item
-				name: 'Pictures';
-				icon: (self iconNamed: #paint);
-				action: [ self openStatisticsPictures ] ];
+				name: 'Show';
+				icon: (self iconNamed: #transcript);
+				subMenu: (self newMenu
+					addItem: [ :i | i
+						name: 'Pictures';
+						icon: (self iconNamed: #paint);
+						action: [ self openStatisticsPictures ] ];
+					addItem: [ :i | i
+						name: 'Numbers';
+						icon: (self iconNamed: #glamorousTable);
+						action: [ self openStatisticsNumbers ] ];
+					addItem: [ :i | i
+						name: 'Game Headlines';
+						icon: (self iconNamed: #glamorousBrowse);
+						action: [ self showHeadlineStatisticsChart ] ];		
+					yourself) ];
 		addItem: [ :item | 
 			item
-				name: 'Numbers';
-				icon: (self iconNamed: #glamorousTable);
-				action: [ self openStatisticsNumbers ] ];
-		addItem: [ :item | 
-			item
-				name: 'Game Headlines';
-				icon: (self iconNamed: #glamorousBrowse);
-				action: [ self showHeadlineStatisticsChart ] ];		
+				name: 'Statistics Settings';
+				icon: (self iconNamed: #configuration);
+				action: [ self openSettings ] ];
 		yourself
 ]

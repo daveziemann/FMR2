@@ -24,7 +24,7 @@ self notebook
 		awardsPresenter ];
 
 	addPageTitle: 'View all Goal Ladders'
-	provider: [SpPresenterGoalLadder new viewAllGoatLadders];
+	provider: [SpPresenterGoalLadder new];
 	
 	addPageTitle: 'View all Possession Time Fractions'
 	provider: [(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPossessionFraction) initialize];	
