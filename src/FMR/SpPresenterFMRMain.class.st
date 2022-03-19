@@ -1769,10 +1769,11 @@ SpPresenterFMRMain >> subMenuMetaStatistics [
 			item
 				name: 'Meta Stats Tabs';
 				icon: (self iconNamed: #database);
-				action: [ SpMetaStatisticsPresenter basicNew 
+				action: [ (SpMetaStatisticsPresenter basicNew 
 					mainPresenter: self;
 					initialize;
-					openWithSpec ]];
+					openWithSpec)
+						extent: 1800@1000 ]];
 		yourself
 		
 

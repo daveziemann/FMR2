@@ -12,14 +12,29 @@ SpPresenterGoalLadder >> colourForTeam: aTeamNumber [
 ^self matchState colourForTeam: aTeamNumber inGame: 0
 ]
 
+{ #category : #drawing }
+SpPresenterGoalLadder >> drawOnCanvas: aCanvas [
+
+self matchState
+	ifNil: [
+		| gameDisplacementX |
+		gameDisplacementX := 0.
+		MatchStateEnumerator new allMatchesDo: [ :eachMatchState |
+			(FMRGoalLadder new matchState: eachMatchState)
+				gameDisplacementX: gameDisplacementX;
+				drawOnCanvas: aCanvas.
+			gameDisplacementX := gameDisplacementX + 12 ]]
+	ifNotNil: [
+		(FMRGoalLadder new matchState: self matchState) drawOnCanvas: aCanvas.
+		(self legendTeams container: aCanvas) build.
+		aCanvas add: self shapeForTitle ]
+]
+
 { #category : #initialization }
 SpPresenterGoalLadder >> initializePresenters [
 | rp |
 rp := self instantiate: SpRoassalPresenter.
-rp script: [ :canvas |
-	(FMRGoalLadder new matchState: self matchState) drawOnCanvas: canvas.
-	(self legendTeams container: canvas) build.
-	canvas add: self shapeForTitle ].
+rp script: [ :canvas | self drawOnCanvas: canvas ].
 self layout: (SpBoxLayout newLeftToRight hAlignStart
 	add: rp withConstraints: [ :c | c width: 1000 ];
 	yourself)

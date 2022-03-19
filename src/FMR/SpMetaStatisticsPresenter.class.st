@@ -24,13 +24,28 @@ self notebook
 		awardsPresenter ];
 
 	addPageTitle: 'View all Goal Ladders'
-	provider: [];
+	provider: [SpPresenterGoalLadder new viewAllGoatLadders];
 	
 	addPageTitle: 'View all Possession Time Fractions'
 	provider: [(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPossessionFraction) initialize];	
 	
 	addPageTitle: 'View all Transition Charts'
 	provider: [(SpMatchStateTabPresenter basicNew modelClass: SpPresenterPseudoRodTransitionChart) initialize];	
+
+	addPageTitle: 'Win/Lose Correlates'
+	provider: [SpStatisticsPagePresenter basicNew 
+		statisticsGenerator:StatisticsGenerator new;
+		modelClass: PSMorphTreeModelTrawlWinCorrrelates;
+		initialize ];	
+
+	addPageTitle: '5-rod Possession Time and Passing Success'
+	provider: [SpPresenterMetaPossessionPassing53Success new];	
+
+	addPageTitle: '3-rod Possession Time and Scoring Success'
+	provider: [SpPresenterMetaPossessionScoring3Success new];	
+
+	addPageTitle: '2-rod Possession Time and Scoring Success'
+	provider: [SpPresenterMetaPossessionScoring2Success new];	
 
 	yourself.
 	
