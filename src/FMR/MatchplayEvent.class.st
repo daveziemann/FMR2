@@ -288,9 +288,10 @@ teamWithPossession_ := gameNumber_ := eventIndex_ := score_ := nil
 { #category : #access }
 MatchplayEvent >> forwardPlayer [
 
-^(self matchState positionSwapParityAtEvent: self)
-	ifTrue: [ self teamWithOwnership backPlayer ]
-	ifFalse: [ self teamWithOwnership forwardPlayer ]
+^self teamWithOwnership in: [ :team |
+	(self matchState positionSwapParityForTeam: team atEvent: self)
+		ifTrue: [ team backPlayer ]
+		ifFalse: [ team forwardPlayer ]]
 ]
 
 { #category : #access }

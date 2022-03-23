@@ -592,12 +592,13 @@ MatchState >> pointTarget [
 ]
 
 { #category : #access }
-MatchState >> positionSwapParityAtEvent: aMatchplayEvent [
+MatchState >> positionSwapParityForTeam: aTeam atEvent: aMatchplayEvent [
 | parityFlip |
 
 parityFlip := false.
 self matchplayEvents do: [ :eachMatchplayEvent |
-	eachMatchplayEvent isPositionSwap ifTrue: [ parityFlip := parityFlip not ].
+	(eachMatchplayEvent isPositionSwap and: [ eachMatchplayEvent teamWithOwnership = aTeam ])
+		ifTrue: [ parityFlip := parityFlip not ].
 	eachMatchplayEvent == aMatchplayEvent ifTrue: [ ^parityFlip ]].
 ^parityFlip
 
