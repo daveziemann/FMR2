@@ -782,6 +782,16 @@ SpPresenterFMRMain >> leftTimeOutLabel: anObject [
 	leftTimeOutLabel := anObject
 ]
 
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> loadMatchState: aMatchState [
+
+self matchState: aMatchState.
+self terminateTimerProcess.
+self updateMatchSummary.
+self updateUIState.
+self statusBarMessage: self matchState matchplayEvents size asString,' matchplay events read in from file: ',self matchState sourceFileName
+]
+
 { #category : #logging }
 SpPresenterFMRMain >> logClear [
 
@@ -1005,7 +1015,12 @@ FMRDocument openFMRFeatures
 
 { #category : #'menu actions' }
 SpPresenterFMRMain >> openFileFinder [
-SpPresenterMatchplayFileFinder open
+| finder answer |
+
+finder := SpPresenterMatchplayFileFinder new.
+answer := finder openModalWithSpec.
+answer cancelled ifFalse: [ self loadMatchState: finder selectedMatchState ]
+
 ]
 
 { #category : #'menu actions' }
@@ -1348,12 +1363,7 @@ SpPresenterFMRMain >> radioButtonNone: anObject [
 { #category : #'menu actions' }
 SpPresenterFMRMain >> readFile [
 
-MatchState readFile ifNotNil: [ :ms |
-	self matchState: ms.
-	self terminateTimerProcess.
-	self updateMatchSummary.
-	self updateUIState.
-	self statusBarMessage: self matchState matchplayEvents size asString,' matchplay events read in from file: ',self matchState sourceFileName ]
+MatchState readFile ifNotNil: [ :ms | self loadMatchState: ms ]
 ]
 
 { #category : #accessing }

@@ -54,7 +54,9 @@ self filesNotMatchingInputField whenSubmitDo: [ self updateFilesFoundListField. 
 self filesFoundListField whenSelectionChangedDo: [ :selection | self updateFileContentsField ].
 self filesFoundListField
 	activateOnDoubleClick;
-	whenActivatedDo: [ :selection | self openMatchplayFile: selection selectedItem ]
+	whenActivatedDo: [ :selection | self window beOk close "self openMatchplayFile: selection selectedItem" ].
+
+self updateFilesFoundListField
 
 ]
 
@@ -171,6 +173,11 @@ SpPresenterMatchplayFileFinder >> filesNotMatchingLabelField: anObject [
 ]
 
 { #category : #initialization }
+SpPresenterMatchplayFileFinder >> initialExtent [
+^900@800
+]
+
+{ #category : #initialization }
 SpPresenterMatchplayFileFinder >> initializePresenters [
 | layoutInputs layoutButtons |
 
@@ -277,6 +284,11 @@ SpPresenterMatchplayFileFinder >> selectedFile [
 SpPresenterMatchplayFileFinder >> selectedMatchState [
 
 ^MatchState readFile: self lastSelectedFile
+]
+
+{ #category : #initialization }
+SpPresenterMatchplayFileFinder >> title [
+^'FMR Matchplay File Finder'
 ]
 
 { #category : #updating }
