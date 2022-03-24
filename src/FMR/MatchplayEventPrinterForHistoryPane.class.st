@@ -7,7 +7,9 @@ Class {
 		'isTimeNone',
 		'isTimeDurationS',
 		'isTimeDurationMS',
-		'isTimeElapsed'
+		'isTimeElapsed',
+		'isTimeElapsedMatch',
+		'isTimeElapsedVideo'
 	],
 	#category : #FMR
 }
@@ -61,15 +63,27 @@ MatchplayEventPrinterForHistoryPane >> isTimeDurationS: anObject [
 ]
 
 { #category : #accessing }
-MatchplayEventPrinterForHistoryPane >> isTimeElapsed [
+MatchplayEventPrinterForHistoryPane >> isTimeElapsedMatch [
 
-	^ isTimeElapsed
+	^ isTimeElapsedMatch
 ]
 
 { #category : #accessing }
-MatchplayEventPrinterForHistoryPane >> isTimeElapsed: anObject [
+MatchplayEventPrinterForHistoryPane >> isTimeElapsedMatch: anObject [
 
-	isTimeElapsed := anObject
+	isTimeElapsedMatch := anObject
+]
+
+{ #category : #accessing }
+MatchplayEventPrinterForHistoryPane >> isTimeElapsedVideo [
+
+	^ isTimeElapsedVideo
+]
+
+{ #category : #accessing }
+MatchplayEventPrinterForHistoryPane >> isTimeElapsedVideo: anObject [
+
+	isTimeElapsedVideo := anObject
 ]
 
 { #category : #accessing }
@@ -92,7 +106,8 @@ string := String streamContents: [ :s |
 	s << aMatchplayEvent printRep.
 	self isTimeDurationS ifTrue: [ s << aMatchplayEvent printDurationToS ].
 	self isTimeDurationMS ifTrue: [ s << aMatchplayEvent printDurationToMS ].
-	self isTimeElapsed ifTrue: [ s << aMatchplayEvent printElapsedTimeVideo ]. "printElapsedTime"
+	self isTimeElapsedMatch ifTrue: [ s << aMatchplayEvent printElapsedTimeFromMatchStart ].
+	self isTimeElapsedVideo ifTrue: [ s << aMatchplayEvent printElapsedTimeFromVideoStart ].
 	s << aMatchplayEvent printDetail ].
 	
 self << (aMatchplayEvent asTextWithAttributes: string).

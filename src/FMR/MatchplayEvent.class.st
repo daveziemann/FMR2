@@ -182,6 +182,20 @@ MatchplayEvent >> durationOverrunFactor [
 ^self durationOrZero divideBy: self reasonableMaximumDuration asMilliSeconds
 ]
 
+{ #category : #access }
+MatchplayEvent >> elapsedTimeFromMatchStart [
+"Answer a Duration, the time that has elapsed since the start of the match until the beginning of this event"
+
+^Duration milliSeconds: self startTime
+]
+
+{ #category : #access }
+MatchplayEvent >> elapsedTimeFromVideoStart [
+"Answer a Duration, the time that has elapsed since the start of the video from which this recording was made, until the beginning of this event"
+
+^self elapsedTimeFromMatchStart + self matchState videoOffsetDuration
+]
+
 { #category : #comparing }
 MatchplayEvent >> equals: anotherMatchplayEvent [
 
@@ -565,13 +579,6 @@ MatchplayEvent >> printBriefly [
 			<< self asDuration prettyPrintToCompleteSeconds ]]
 ]
 
-{ #category : #'UI - graphics' }
-MatchplayEvent >> printBriefly1 [
-^String streamContents: [ :s |
-	s << self printIndex; << self printRep.
-	self durationOrZero isZero ifFalse: [ s space; << 'Duration: '; << self asDuration prettyPrintToCompleteSeconds ]]
-]
-
 { #category : #printing }
 MatchplayEvent >> printCurrentGameScore [
 | ps |
@@ -631,24 +638,26 @@ MatchplayEvent >> printDurationToS [
 ]
 
 { #category : #printing }
-MatchplayEvent >> printElapsedTime [
+MatchplayEvent >> printElapsedTimeFromMatchStart [
+"Print the elapsed time, the time from the start of the match to the start of this event"
+
 ^String streamContents: [  :s |
 	self duration ifNotNil: [
 		s
 		<< ${;
-		<< self startDuration prettyPrintToCompleteSeconds;
+		<< self elapsedTimeFromMatchStart prettyPrintToCompleteSeconds;
 		<< $} ]]
 ]
 
 { #category : #printing }
-MatchplayEvent >> printElapsedTimeVideo [
+MatchplayEvent >> printElapsedTimeFromVideoStart [
 "Print the elapsed time, the time from the start of the video to the start of this event"
 
 ^String streamContents: [  :s |
 	self duration ifNotNil: [
 		s
 		<< ${;
-		<< self startDurationFromVideo prettyPrintToCompleteSeconds;
+		<< self elapsedTimeFromVideoStart prettyPrintToCompleteSeconds;
 		<< $} ]]
 ]
 
@@ -758,20 +767,6 @@ MatchplayEvent >> sideWithPossession [
 	- consider the parity of the possession flips in my parent's matchplay events"
 	
 ^self matchState sideWithPossessionInEvent: self
-]
-
-{ #category : #access }
-MatchplayEvent >> startDuration [
-"Answer a Duration, the time that has elapsed since the start of the match until the beginning of this event"
-
-^Duration milliSeconds: self startTime
-]
-
-{ #category : #access }
-MatchplayEvent >> startDurationFromVideo [
-"Answer a Duration, the time that has elapsed since the start of the video from which this recording was made, until the beginning of this event"
-
-^self startDuration + self matchState videoOffsetDuration
 ]
 
 { #category : #access }

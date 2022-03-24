@@ -30,13 +30,14 @@ Class {
 		'radioButtonNone',
 		'radioButtonDurationS',
 		'radioButtonDurationMS',
-		'radioButtonElapsed',
 		'matchplayEventPrinterHistoryPane',
 		'ignoreSpuriousActivation',
 		'headlinePresenter',
 		'historyPaneEditState',
 		'leftTimeOutLabel',
-		'rightTimeOutLabel'
+		'rightTimeOutLabel',
+		'radioButtonElapsedMatch',
+		'radioButtonElapsedVideo'
 	],
 	#classVars : [
 		'ShouldOpenHeadlineStatisticsAfterEachGame',
@@ -208,7 +209,7 @@ self recordingInputField whenSubmitDo: [ :text | self processSubmit: text ].
 "self historyPaneField eventHandler whenFocusReceivedDo: [ self halt ]."
 
 radioButtonCompact associatedRadioButtons: {radioButtonLines}; state: true.
-radioButtonNone associatedRadioButtons: {radioButtonDurationS.radioButtonDurationMS.radioButtonElapsed}; state: true.
+radioButtonNone associatedRadioButtons: {radioButtonDurationS.radioButtonDurationMS.radioButtonElapsedMatch.radioButtonElapsedVideo}; state: true.
 
 self currentGame: '' asText.
 ]
@@ -308,13 +309,6 @@ self updateUIState.
 SpPresenterFMRMain >> editMatchDetails [
 
 SpPresenterFMRMatchDetails openOn: self
-]
-
-{ #category : #initialization }
-SpPresenterFMRMain >> elapsedRelativity [
-^self matchState videoOffsetDuration
-	ifNil: [ 'match' ]
-	ifNotNil: [ 'video' ]
 ]
 
 { #category : #menu }
@@ -527,7 +521,7 @@ SpPresenterFMRMain >> initializeControls [
 | controlsFormat controlsTime queryHP formatLabel showTimeLabel |
 
 formatLabel := self newLabel label: 'Format'; help: self helpHistoryFormat.
-showTimeLabel := self newLabel label: 'Show Time'; help: self helpHistoryShowTime.
+showTimeLabel := self newLabel label: 'Event Time'; help: self helpHistoryShowTime.
 
 queryHP := self newImage
 	help: self helpHistoryPaneField;
@@ -541,7 +535,8 @@ radioButtonLines := (self newHistoryPaneRadioButton: 'Lines') help: 'Show each e
 radioButtonNone := (self newHistoryPaneRadioButton: 'None') help: 'Don''t show event durations'.
 radioButtonDurationS := (self newHistoryPaneRadioButton: 'Duration (s)') help: 'Show event durations to the nearest complete second'.
 radioButtonDurationMS := (self newHistoryPaneRadioButton: 'Duration (ms)') help: 'Show event durations in milliseconds'.
-radioButtonElapsed := (self newHistoryPaneRadioButton: 'Elapsed') help: 'Show the start time of each event relative to the start of the video/match'.
+radioButtonElapsedMatch := (self newHistoryPaneRadioButton: 'Elapsed Match') help: 'Show the start time of each event relative to the start of the match'.
+radioButtonElapsedVideo := (self newHistoryPaneRadioButton: 'Elapsed Video') help: 'Show the start time of each event relative to the start of the video'.
 
 controlsFormat := SpBoxLayout newTopToBottom 
 	add: queryHP withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
@@ -555,12 +550,13 @@ controlsTime := SpBoxLayout newTopToBottom
 	add: radioButtonNone withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
 	add: radioButtonDurationS withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
 	add: radioButtonDurationMS withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
-	add: radioButtonElapsed withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
+	add: radioButtonElapsedMatch withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
+	add: radioButtonElapsedVideo withConstraints: [ :c | c padding: 0; height: StandardFonts defaultFont height ];
 	yourself.
 
 controls := SpBoxLayout newTopToBottom vAlignStart
-	add: controlsFormat withConstraints: [ :c | c padding: 0; height: 80 ];
-	add: controlsTime withConstraints: [ :c | c padding: 0; height: 100 ];
+	add: controlsFormat withConstraints: [ :c | c padding: 0; height: 90 ];
+	add: controlsTime withConstraints: [ :c | c padding: 0; height: 120 ];
 	add: (self newButton label: 'Play video'; help: self helpPlayVideo; action: [ self playVideo ]; enable; yourself)
 	withConstraints: [ :c |c padding: 2; height: StandardFonts defaultFont height + 15 ];
 	add: (self newButton label: 'Open chart'; help: self helpOpenChart; action: [ self openChart ]; enable; yourself)
@@ -820,7 +816,8 @@ SpPresenterFMRMain >> matchplayEventPrinterHistoryPane [
 	isTimeNone: radioButtonNone state;
 	isTimeDurationS: radioButtonDurationS state;
 	isTimeDurationMS: radioButtonDurationMS state;
-	isTimeElapsed: radioButtonElapsed state;
+	isTimeElapsedMatch: radioButtonElapsedMatch state;
+	isTimeElapsedVideo: radioButtonElapsedVideo state; 
 	yourself
 ]
 
@@ -1301,15 +1298,27 @@ SpPresenterFMRMain >> radioButtonDurationS: anObject [
 ]
 
 { #category : #accessing }
-SpPresenterFMRMain >> radioButtonElapsed [
+SpPresenterFMRMain >> radioButtonElapsedMatch [
 
-	^ radioButtonElapsed
+	^ radioButtonElapsedMatch
 ]
 
 { #category : #accessing }
-SpPresenterFMRMain >> radioButtonElapsed: anObject [
+SpPresenterFMRMain >> radioButtonElapsedMatch: anObject [
 
-	radioButtonElapsed := anObject
+	radioButtonElapsedMatch := anObject
+]
+
+{ #category : #accessing }
+SpPresenterFMRMain >> radioButtonElapsedVideo [
+
+	^ radioButtonElapsedVideo
+]
+
+{ #category : #accessing }
+SpPresenterFMRMain >> radioButtonElapsedVideo: anObject [
+
+	radioButtonElapsedVideo := anObject
 ]
 
 { #category : #accessing }
@@ -1828,9 +1837,6 @@ self timerProcess ifNotNil: [
 SpPresenterFMRMain >> updateMatchSummary [
 self window title: 'FMR Recording - ',self matchState matchDescriptionWithTeamName,' - ',self matchState matchStatusSummary.
 self feedbackLabel label: self matchResultSummary.
-
-self radioButtonElapsed help: 'Show the start time of each event relative to the start of the ',self elapsedRelativity
-
 ]
 
 { #category : #'menu actions - history pane editing' }

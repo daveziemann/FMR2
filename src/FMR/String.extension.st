@@ -9,7 +9,8 @@ String >> prettyAsDuration [
 | letters colonFormat |
 
 letters := self reject: [ :e | e isDigit ].
-colonFormat := (self copyReplaceAll: 'm' with: ':') copyReplaceAll: 's' with: ':'.
+colonFormat := ((self copyReplaceAll: 'h' with: ':') copyReplaceAll: 'm' with: ':') copyReplaceAll: 's' with: ':'.
+(letters size = 3 and: [ letters = 'hms' ]) ifTrue: [ ^('0:',colonFormat) asDuration ].
 (letters size = 2 and: [ letters = 'ms' ]) ifTrue: [ ^('0:0:',colonFormat) asDuration ].
 (letters size = 1 and: [ letters first = $m ]) ifTrue: [ ^('0:0:',colonFormat,':0') asDuration ].
 (letters size = 1 and: [ letters first = $s ]) ifTrue: [ ^('0:0:0:',colonFormat) asDuration ].

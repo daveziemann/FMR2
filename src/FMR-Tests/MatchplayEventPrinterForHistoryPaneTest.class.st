@@ -437,7 +437,8 @@ p := (MatchplayEventPrinter forHistoryPane matchState: ms)
 	isTimeNone: true;
 	isTimeDurationS: false;
 	isTimeDurationMS: false;
-	isTimeElapsed: false;
+	isTimeElapsedMatch: false;
+	isTimeElapsedVideo: false;
 	yourself.
 p printMatchplayEvents: ms matchplayEvents.
 self assert: p text asString equals: self expectedResult
