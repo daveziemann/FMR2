@@ -78,6 +78,11 @@ PresentableStatistic_ class >> isTeamStatistic [
 ^false
 ]
 
+{ #category : #'meta stats' }
+PresentableStatistic_ class >> metaAverage [ 
+^self subclassResponsibility 
+]
+
 { #category : #interestingness }
 PresentableStatistic_ class >> relativeInterestingnessTrigger [
 ^RelativeInterestingnessTrigger ifNil: [ self relativeInterestingnessTriggerDefault ]

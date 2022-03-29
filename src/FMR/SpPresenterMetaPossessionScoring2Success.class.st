@@ -25,12 +25,12 @@ lb build.
 ]
 
 { #category : #access }
-SpPresenterMetaPossessionScoring2Success >> maxValue [
+SpPresenterMetaPossessionScoring2Success >> maxValueY [
 ^10
 ]
 
 { #category : #access }
-SpPresenterMetaPossessionScoring2Success >> minValue [
+SpPresenterMetaPossessionScoring2Success >> minValueY [
 ^0
 ]
 

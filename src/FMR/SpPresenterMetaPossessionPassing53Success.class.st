@@ -25,12 +25,12 @@ lb build.
 ]
 
 { #category : #access }
-SpPresenterMetaPossessionPassing53Success >> maxValue [
+SpPresenterMetaPossessionPassing53Success >> maxValueY [
 ^50
 ]
 
 { #category : #access }
-SpPresenterMetaPossessionPassing53Success >> minValue [
+SpPresenterMetaPossessionPassing53Success >> minValueY [
 ^30
 ]
 

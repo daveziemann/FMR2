@@ -12,6 +12,18 @@ PresentableTeamStatistic_ class >> isTeamStatistic [
 ^true
 ]
 
+{ #category : #'meta stats' }
+PresentableTeamStatistic_ class >> metaAverage [
+| c ps |
+
+c := OrderedCollection new.
+MatchStateEnumerator new allCompletedStandardMatchesDo: [ :eachMatchState |
+	ps := (self new matchState: eachMatchState) generate.
+	c add: (ps getResultForGame: 0 teamNumber: 1).
+	c add: (ps getResultForGame: 0 teamNumber: 2) ].
+^(c collect:[:e | e singletonValue ]) average
+]
+
 { #category : #enumerating }
 PresentableTeamStatistic_ >> allConfigurationsDo: aBlock [
 ^self allGamesDo: [ self bothTeamsDo: aBlock ]

@@ -9,6 +9,17 @@ PresentableTableStatistic_ class >> isMatchStatistic [
 ^true
 ]
 
+{ #category : #'meta stats' }
+PresentableTableStatistic_ class >> metaAverage [
+| c ps |
+
+c := OrderedCollection new.
+MatchStateEnumerator new allCompletedStandardMatchesDo: [ :eachMatchState |
+	ps := (self new matchState: eachMatchState) generate.
+	c add: ps getResultForMatch ].
+^(c collect:[:e | e singletonValue ]) average
+]
+
 { #category : #enumerating }
 PresentableTableStatistic_ >> allConfigurationsDo: aBlock [
 ^self allGamesDo: aBlock

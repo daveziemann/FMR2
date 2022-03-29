@@ -25,7 +25,8 @@ popup chartPopupBuilder: (RSBlockChartPopupBuilder new
 		RSLabel new text: point y asString,'% success after ',point x asString,'ms'; bold ]).
 
 chart addPlot: lp1.
-chart minValueY: self minValue; maxValueY: self maxValue.
+"chart maxValueX: self maxValueX."
+chart minValueY: self minValueY; maxValueY: self maxValueY.
 
 vertical := RSVerticalTick new
 	numberOfTicks: 10;
@@ -58,7 +59,7 @@ SpPresenterMetaPossessionTimeSuccess >> dataToPlot [
 data := Array new: self possessionTimesAndSuccess last key withAll: #(0 0).
 self possessionTimesAndSuccess do: [ :e | data at: e key put: (data at: e key) + {1.e value} ].
 data doWithIndex: [ :e :i |	i=1 ifFalse: [ data at: i put: (data at: i)+(data at: i-1) ]].
-^data collect: [ :e | ((100.0 * (e second divideBy: e first)) round: 1) max: self minValue ]
+^data collect: [ :e | ((100.0 * (e second divideBy: e first)) round: 1) max: self minValueY ]
 
 ]
 
@@ -112,12 +113,12 @@ self layout: (SpBoxLayout newLeftToRight hAlignStart
 ]
 
 { #category : #access }
-SpPresenterMetaPossessionTimeSuccess >> maxValue [
+SpPresenterMetaPossessionTimeSuccess >> maxValueY [
 ^self subclassResponsibility  
 ]
 
 { #category : #access }
-SpPresenterMetaPossessionTimeSuccess >> minValue [
+SpPresenterMetaPossessionTimeSuccess >> minValueY [
 ^self subclassResponsibility  
 ]
 
