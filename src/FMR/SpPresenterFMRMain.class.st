@@ -289,7 +289,7 @@ self matchState deleteLatestMatchplayEvent.
 	- if we do not reset the timer then:
 		- the next event will have a duration that's slightly too long"
 
-"On blance, do not reset the timer; let the user do it with the r key"
+"On balance, do not reset the timer; let the user do it with the r key"
 "self resetTimer."
 
 ]
@@ -785,8 +785,8 @@ SpPresenterFMRMain >> leftTimeOutLabel: anObject [
 { #category : #'menu actions' }
 SpPresenterFMRMain >> loadMatchState: aMatchState [
 
+self resetForNewMatchState.
 self matchState: aMatchState.
-self terminateTimerProcess.
 self updateMatchSummary.
 self updateUIState.
 self statusBarMessage: self matchState matchplayEvents size asString,' matchplay events read in from file: ',self matchState sourceFileName
@@ -1058,7 +1058,7 @@ self matchState matchplayTimer isRunning
 { #category : #'menu actions' }
 SpPresenterFMRMain >> playVideo [
 
-self matchState openWebBrowserOnURLVideo.
+self matchState openWebBrowserOnURLVideoAtEvent: self selectedMatchplayEvent.
 self recordingInputField takeKeyboardFocus.
 ]
 
@@ -1419,6 +1419,16 @@ self matchState isEndMatch
 		self recordingInputField takeKeyboardFocus ]
 ]
 
+{ #category : #initialization }
+SpPresenterFMRMain >> resetForNewMatchState [
+
+self recordingInputField text: ''.
+self oldInputString: ''.
+self newInputString: ''.
+self terminateTimerProcess.
+
+]
+
 { #category : #'processing - real time' }
 SpPresenterFMRMain >> resetTimer [
 
@@ -1507,6 +1517,18 @@ SpPresenterFMRMain >> saveFileAs [
 self matchState saveFileAs ifNotNil: [
 		self statusBarMessage:
 			self matchState matchplayEvents size asString,' matchplay events written to file: ',self matchState sourceFileName ]
+]
+
+{ #category : #'menu actions' }
+SpPresenterFMRMain >> selectedMatchplayEvent [
+"Identify and answer the matchplay event just before by the start of the history pane text selection"
+
+|stringUpToSelection newMatchState|
+
+stringUpToSelection := (self historyPaneField text copyFrom: 1 to: self historyPaneField selectionInterval first) asString.
+newMatchState := MatchState new.
+newMatchState commandProcessor shouldGrowlErrors: false; processRecordedString: stringUpToSelection.
+^newMatchState matchplayEvents last
 ]
 
 { #category : #initialization }

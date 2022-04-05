@@ -572,6 +572,18 @@ MatchState >> openWebBrowserOnURLVideo [
 self urlVideo ifNotNil: [ self urlVideo ifNotEmpty: [ WebBrowser openOn: self urlVideo,' ' ]]
 ]
 
+{ #category : #actions }
+MatchState >> openWebBrowserOnURLVideoAtEvent: aMatchplayEvent [
+| startPoint |
+
+startPoint := ('*www.youtube.com*' match: self urlVideo)
+	ifTrue: [ '&t=',aMatchplayEvent elapsedTimeFromVideoStart asSeconds asString]
+	ifFalse: [ '' ].
+
+"A weird bug. Some URLs get corrupted if there isn't a space at the end"
+self urlVideo ifNotNil: [ self urlVideo ifNotEmpty: [ WebBrowser openOn: self urlVideo,startPoint,' ' ]]
+]
+
 { #category : #access }
 MatchState >> otherTeam: aTeam [
 
