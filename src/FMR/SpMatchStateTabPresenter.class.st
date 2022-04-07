@@ -47,21 +47,6 @@ MatchStateEnumerator new allMatchesDo: [ :eachMatchState |
 
 ]
 
-{ #category : #initialization }
-SpMatchStateTabPresenter >> initializePresenters1 [
-| n |
-self notebook: self newNotebook.
-n := 0.
-MatchStateEnumerator new allMatchesDo: [ :eachMatchState |
-	n := n+1.
-	self notebook
-		addPageTitle: n asString
-		provider: [ SpPresenterPossessionFraction basicNew matchState: eachMatchState; initialize ]]
-
-
-
-]
-
 { #category : #accessing }
 SpMatchStateTabPresenter >> modelClass [
 

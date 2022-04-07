@@ -28,7 +28,7 @@ endGameLines := (self matchState endGameEvents removeLast; yourself) collect: [ 
 		color: Color gray;
 		startPoint: endGameLocation @ (PseudoRodTransition pseudoRodLocation: teamOneGoal);
 		endPoint: endGameLocation @ (PseudoRodTransition pseudoRodLocation: teamTwoGoal);
-		width: 1;	
+		width: 4;	
 		dashed;
 		@ popup;
 		when: RSMouseClick do: self mouseClickBlock;
