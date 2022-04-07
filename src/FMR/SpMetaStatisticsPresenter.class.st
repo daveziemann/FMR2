@@ -45,9 +45,7 @@ self notebook
 	provider: [SpPresenterMetaPossessionScoring3Success new];	
 
 	addPageTitle: '2-rod Possession Time and Scoring Success'
-	provider: [SpPresenterMetaPossessionScoring2Success new];	
-
-	yourself.
+	provider: [SpPresenterMetaPossessionScoring2Success new].
 	
 	
 self layout: (SpBoxLayout newTopToBottom
