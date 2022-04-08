@@ -157,6 +157,7 @@ SpPresenterHeadlineChart >> heading: aString onRow: aRowNumber [
 	text: aString;
 	fontSize: self rowHeadingFontSize;
 	translateMiddleRightTo: 0@(aRowNumber-1*self barHeight);
+	bold;
 	yourself
 ]
 
