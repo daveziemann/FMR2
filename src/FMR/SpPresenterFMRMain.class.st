@@ -1527,7 +1527,7 @@ SpPresenterFMRMain >> selectedMatchplayEvent [
 
 stringUpToSelection := (self historyPaneField text copyFrom: 1 to: self historyPaneField selectionInterval first) asString.
 newMatchState := MatchState new.
-newMatchState commandProcessor shouldGrowlErrors: false; processRecordedString: stringUpToSelection.
+newMatchState commandProcessor shouldGrowlErrors: false; processRecordedString: (stringUpToSelection copyUpToLast: Character cr).
 ^newMatchState matchplayEvents last
 ]
 
